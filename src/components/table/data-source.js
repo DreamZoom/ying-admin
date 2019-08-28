@@ -25,8 +25,10 @@ export default class DataSource {
 
 	post(action, args) {
 		const url = this.source[action] || '';
-		return this.http.post(url, {
-			...args
+		return this.http.get(url, {
+			params:{
+                ...args
+            }
 		});
 	}
 }
