@@ -2,6 +2,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 import http from "./http";
+import DataSource from "./table/data-source"
 
 import table from "./table/table.vue"
 import tableAction from "./table/table-action.vue"
@@ -42,5 +43,6 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 export default {
     version: '0.0.0.1',
-    install
+    install,
+    DataSource
 };

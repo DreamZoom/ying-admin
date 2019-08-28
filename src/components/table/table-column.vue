@@ -10,5 +10,10 @@ export default {
     label: String,
     prop:String
   }
+
+  ,
+  mounted(){
+    
+  }
 };
 </script>
