@@ -45,6 +45,8 @@ export default {
           this.log(table);
           this.log(rows);
         }
+
+        config.search.expression="(name=${name}&&age>${age})&&time>${time}";
     }
   }
 }

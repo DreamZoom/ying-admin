@@ -242,8 +242,9 @@
 </script>
 <style lang="css">
   .ying-pagination-wapper {
-    padding: 10px 0px;
-    text-align: right;
+    padding: 5px 0px;
+    /* text-align: right; */
+    border: 1px solid #EBEEF5;
   }
   .ying-table-toolbar {
     background: #f5f7f9;
