@@ -1,5 +1,6 @@
 import axios from 'axios';
-import qs from 'Qs';
+import qs from 'qs';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.interceptors.response.use(
 	(response) => {
 		//成功请求到数据
@@ -12,19 +13,31 @@ axios.interceptors.response.use(
 );
 
 export default {
-	get(url, options) {
+	get(url, data) {
 		return axios.get(url, {
-			...options
+			paramsSerializer: function(params) {
+				return qs.stringify(params, { arrayFormat: 'repeat' });
+			},
+			params: {
+				...data
+			}
 		});
 	},
-	post(url, options) {
+	post(url, data) {
 		// return axios.post(url, qs.stringify({...options}));
-		axios({
+		return axios({
 			method: 'post',
 			url: url,
-			data: {
-				...options
-			}
+			// headers:{
+			// 	"Content-Type":"multipart/form-data"
+			// },
+
+			data: qs.stringify(
+				{
+					...data
+				},
+				{ arrayFormat: 'repeat' }
+			)
 		});
 	}
 };

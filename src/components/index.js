@@ -5,15 +5,14 @@ import http from "./http";
 import DataSource from "./table/data-source"
 
 import table from "./table/table.vue"
-import tableAction from "./table/table-action.vue"
 import tableColumn from "./table/table-column.vue"
-import tableActions from "./table/table-actions.vue"
+
+import layout from "./layout.vue";
 
 const components = {
     table,
     tableColumn,
-    tableActions,
-    tableAction
+    layout
 };
 
 console.log(components)

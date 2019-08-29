@@ -1,5 +1,5 @@
 <template>
-  <ying-table data-url="api/client/page-list">
+  <ying-table base="api/client/" :config="config">
     <template slot="search" slot-scope="scope">
       <el-form-item label="审批人">
         <el-input v-model="scope.search.user" placeholder="审批人"></el-input>
@@ -22,11 +22,6 @@
     <ying-table-column prop="appName" label="应用名称"></ying-table-column>
     <ying-table-column prop="appDesc" label="应用描述"></ying-table-column>
     <ying-table-column prop="clientId" label="应用ID"></ying-table-column>
-    <ying-table-actions>
-      <ying-table-action name="check" text="审核"></ying-table-action>
-      <ying-table-action name="notify" text="通知"></ying-table-action>
-      <ying-table-action name="upload" text="上传"></ying-table-action>
-    </ying-table-actions>
   </ying-table>
 </template>
 <script>
@@ -39,6 +34,17 @@ export default {
   methods:{
     log(o){
       console.log(o);
+    },
+    config(source,config){
+        config.batch_actions.push({name:"batch-check",text:"批量审核"});
+        config.actions.push({name:"check",text:"审核"});
+        config.actions.push({name:"upload",text:"上传"});
+
+
+        config.methods["batch-check"]=(table,rows)=>{
+          this.log(table);
+          this.log(rows);
+        }
     }
   }
 }

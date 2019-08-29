@@ -17,18 +17,14 @@ export default class DataSource {
 	get(action, args) {
 		const url = this.source[action] || '';
 		return this.http.get(url, {
-            params:{
-                ...args
-            }
+            ...args
 		});
 	}
 
 	post(action, args) {
 		const url = this.source[action] || '';
-		return this.http.get(url, {
-			params:{
-                ...args
-            }
+		return this.http.post(url, {
+			...args
 		});
 	}
 }

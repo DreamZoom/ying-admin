@@ -4,7 +4,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-button-group>
-            <el-button size="small" type="primary" v-for="(item,i) in actions" :key="i" @click="handleAction(item.name)">{{item.text}}</el-button>
+            <el-button size="small" type="primary" v-for="(item,i) in setting.batch_actions" :key="i" @click="triggerCommand(item.name,multiple_selections)">{{item.text}}</el-button>
           </el-button-group>
         </el-col>
         <el-col :span="12">
@@ -23,6 +23,11 @@
       <el-table-column type="selection" width="35">
       </el-table-column>
       <slot></slot>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" v-for="(item,i) in setting.actions" :key="i"  @click="triggerCommand(item.name,scope.row)">{{item.text}}</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <div class="ying-pagination-wapper">
       <el-pagination background layout="prev, pager, next" :total="pagination.total" :current-page.sync="pagination.page" :page-size="pagination.size" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
@@ -33,7 +38,6 @@
         <el-form ref="form" :model="edit_model" label-width="80px">
           <slot name="edit" :model="edit_model"></slot>
         </el-form>
-        
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="edit_model=null">取 消</el-button>
@@ -47,8 +51,8 @@
   export default {
     name: "YingTable",
     props: {
-      dataUrl: String,
-      dataFormatter: {
+      base: String,
+      formatter: {
         type: Function,
         default: function(d) {
           return {
@@ -57,13 +61,9 @@
           };
         }
       },
-      configSource: {
+      config: {
         type: Function,
-        default: function(source) {}
-      },
-      configActions: {
-        type: Function,
-        default: function(actions) {}
+        default: function(source,setting) {}
       }
     },
     data() {
@@ -71,15 +71,19 @@
         list: [],
         pagination: {
           page: 1,
-          size: 20,
+          size: 12,
           total: 0
         },
         search: {
           name: "wxl"
         },
-        actions: [],
+        setting:{
+          batch_actions:[],
+          actions:[],
+          methods:[]
+        },
         multiple_selections: [],
-        edit_model:null
+        edit_model: null
       };
     },
     mounted() {
@@ -87,46 +91,58 @@
     },
     computed: {
       show_search() {
-        return this.$slots.search ? true : false;
+        return this.$scopedSlots.search ? true : false;
       }
     },
     methods: {
       init() {
         //配置数据源
         this.$dataSource = new DataSource(this.$http);
-        this.$dataSource.add("page-list", "api/client/page-list");
-        this.$dataSource.add("save", "api/client/save");
-        this.$dataSource.add("delete", "api/client/delete");
-        this.$dataSource.add("find", "api/client/find");
-        this.configSource(this.$dataSource);
-        //操作
-        this.actions.push({
-          name: "create",
-          text: "创建"
-        });
-        this.actions.push({
-          name: "batch-delete",
-          text: "删除"
-        });
-        this.configActions(this.actions);
-
+        //默认配置
+        this.default_config(this.$dataSource,this.setting);
+        //配置
+        this.config(this.$dataSource,this.setting);
         //加载数据
         this.loadData();
+        
+      },
+      reload(first){
+        first=first||false;
+        if(first){
+          this.pagination.page=1;
+        }
+        this.loadData();
+      },
+      default_config(source,setting){
 
+        ["page-list","save","delete","find","batch-delete"].map((item)=>{
+            source.add(item,this.base+item);
+        });
+          //操作
+        setting.batch_actions.push({name:"create",text:"创建"});
+        setting.batch_actions.push({name:"batch-delete",text:"批量删除"});
+        
+        setting.actions.push({name:"update",text:"编辑"});
+        setting.actions.push({name:"delete",text:"删除"});
 
         //绑定操作
-        this.action_methods={
-          create:(args)=>{
-            this.edit_model={};
+        setting.methods = {
+          create: function(table,args){
+            table.edit_model = {};
           },
-          update:function(row){
-            this.edit_model=row;
+          update: function(table,row) {
+            table.edit_model = row;
+          },
+          delete: function(table,row){
+            table.handleDelete(row);
+          },
+          "batch-delete": function(table,rows){
+            table.handleBatchDelete(rows);
           }
         }
-
+        
       },
       loadData() {
-        console.log(this.$dataSource);
         this.$dataSource
           .get("page-list", {
             page: this.pagination.page - 1,
@@ -135,9 +151,12 @@
           .then(response => {
             console.log(response);
             if (response.result) {
-              const data = this.dataFormatter(response.data);
+              const data = this.formatter(response.data);
               this.list = data.list;
               this.pagination.total = data.total;
+            }
+            else{
+              this.$message.error("数据加载失败");
             }
           });
       },
@@ -150,25 +169,73 @@
         this.loadData();
       },
       triggerCommand(cmd, args) {
-        console.log(cmd);
-        console.log(args);
-        const method = this.action_methods[cmd];
-        if(method&& typeof method ==='function'){
-          method.apply(this,[args]);
+        const method = this.setting.methods[cmd];
+        if (method && typeof method === 'function') {
+           method(this,args);
         }
-      },
-      handleAction(action) {
-        this.triggerCommand(action, this.multiple_selections);
       },
       handleSelectionChange(rows) {
         this.multiple_selections = rows;
       },
-      handleSave(model){
-        this.$dataSource.post("save",{...model}).then(function(response){
-            if(response.result){
-              this.edit_model=null;
-            }
+      handleSave(model) {
+        this.$dataSource.post("save", { ...model
+        }).then((response) => {
+          if (response.result) {
+            this.edit_model = null;
+            this.$message.success("保存成功");
+            this.loadData();
+          }
+          else{
+            this.$message.error("保存失败:"+response.message);
+          }
         });
+      },
+      handleDelete(model) {
+        this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$dataSource.post("delete", {
+            ...model
+          }).then((response) => {
+            if (response.result) {
+              this.$message.success("删除成功");
+              this.loadData();
+            } else {
+              this.$message.error("删除失败");
+            }
+          });
+        }).catch(() => {
+          this.$message.info("已取消删除")
+        });
+      },
+      handleBatchDelete(rows) {
+        if (rows && rows instanceof Array && rows.length > 0) {
+          const ids = rows.map((r) => {
+            return r.id
+          });
+          this.$confirm('此操作将永久删除这些记录, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$dataSource.post("batch-delete", {
+              ids:ids
+            }).then((response) => {
+              if (response.result) {
+                this.$message.success("删除成功");
+                this.loadData();
+              } else {
+                this.$message.error("删除失败");
+              }
+            });
+          }).catch(() => {
+            this.$message.info("已取消删除")
+          });
+        } else {
+          this.$message.error("请选择记录");
+        }
       }
     }
   };
