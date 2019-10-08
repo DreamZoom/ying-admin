@@ -1,4 +1,4 @@
-import ElementUI from 'element-ui';
+
 
 import http from "./http";
 import DataSource from "./table/data-source"
@@ -19,9 +19,7 @@ console.log(components)
 const install = function(Vue, opts = {}) {
 	//locale.use(opts.locale);
     //locale.i18n(opts.i18n);
-    Vue.use(ElementUI,{
-        size:"small"
-    });
+   
 
     Object.keys(components).forEach((key)=>{
          const component =components[key];
