@@ -80,7 +80,8 @@
         setting:{
           batch_actions:[],
           actions:[],
-          methods:[]
+          methods:[],
+          search:{}
         },
         multiple_selections: [],
         edit_model: null
