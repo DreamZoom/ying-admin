@@ -1,0 +1,9 @@
+.*
+/node_modules
+/src
+/build
+/config
+index.html
+README.md
+package-lock.json
+webpack.config.js

@@ -1,5 +1,4 @@
 import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
 
 import http from "./http";
 import DataSource from "./table/data-source"
@@ -20,7 +19,6 @@ console.log(components)
 const install = function(Vue, opts = {}) {
 	//locale.use(opts.locale);
     //locale.i18n(opts.i18n);
-    
     Vue.use(ElementUI,{
         size:"small"
     });
