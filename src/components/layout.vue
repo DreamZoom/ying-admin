@@ -19,7 +19,7 @@
                 </slot>
             </div>
             <div class="ying-menu">
-                <el-menu background-color="#20222A" text-color="#fff" active-text-color="#ffd04b" :collapse="side_collapse" :collapse-transition="false">
+                <el-menu background-color="#20222A" text-color="#fff" active-text-color="#ffd04b" :collapse="side_collapse" :collapse-transition="false" v-bind="setting.menu">
                     <slot name="side-menu"></slot>
                 </el-menu>
             </div>
@@ -42,7 +42,8 @@
             return {
                 side_collapse:false,
                 setting: {
-                    tools:[]
+                    tools:[],
+                    menu:{}
                 }
             }
         },

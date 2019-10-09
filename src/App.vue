@@ -71,6 +71,8 @@
             console.log(this);
           }
         })
+
+        setting.menu.router=true;
       }
     }
   }
