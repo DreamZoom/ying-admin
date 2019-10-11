@@ -6,12 +6,15 @@ import DataSource from "./table/data-source"
 import table from "./table/table.vue"
 import tableColumn from "./table/table-column.vue"
 
+import select from "./input/select.vue"
+
 import layout from "./layout.vue";
 
 const components = {
     table,
     tableColumn,
-    layout
+    layout,
+    select
 };
 
 console.log(components)

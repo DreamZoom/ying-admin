@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ying-table-toolbar">
+    <div class="ying-table-toolbar" v-if="show_toolbar">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-button-group>
@@ -19,9 +19,9 @@
         </el-col>
       </el-row>
     </div>
-    <el-table border :data="list" @selection-change="handleSelectionChange" header-row-class-name="ying-table-header" class="ying-table">
+    <el-table border :data="list" @selection-change="handleSelectionChange" header-row-class-name="ying-table-header" class="ying-table" ref="ying_multiple_table">
       <el-table-column type="selection" width="35">
-      </el-table-column>
+      </el-table-column> 
       <slot></slot>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -52,6 +52,14 @@
     name: "YingTable",
     props: {
       base: String,
+      show_toolbar:{
+          type:Boolean,
+          default:true
+      },
+      multiple:{
+        type:Boolean,
+        default:true
+      },
       formatter: {
         type: Function,
         default: function(d) {
@@ -78,6 +86,7 @@
           name: "wxl"
         },
         setting:{
+          show_toolbar:true,
           batch_actions:[],
           actions:[],
           methods:[],
@@ -132,7 +141,7 @@
             table.edit_model = {};
           },
           update: function(table,row) {
-            table.edit_model = row;
+            table.edit_model = {...row};
           },
           delete: function(table,row){
             table.handleDelete(row);
@@ -176,7 +185,25 @@
         }
       },
       handleSelectionChange(rows) {
-        this.multiple_selections = rows;
+        console.log(rows);  
+        if(!this.multiple){
+          if(rows.length>1){
+            const row = rows.pop();
+            this.$refs.ying_multiple_table.clearSelection();
+            this.$refs.ying_multiple_table.toggleRowSelection(row);
+            this.multiple_selections = [row];
+          }
+          else{
+            this.multiple_selections = rows;
+          }  
+        }
+        else{
+          this.multiple_selections = rows;  
+        }
+          
+      },
+      getSelections(){
+        return this.multiple_selections;
       },
       handleSave(model) {
         this.$dataSource.post("save", { ...model

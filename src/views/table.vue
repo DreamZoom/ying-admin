@@ -1,5 +1,5 @@
 <template>
-  <ying-table base="api/client/" :config="config">
+  <ying-table base="api/user/client/" :config="config">
     <template slot="search" slot-scope="scope">
       <el-form-item label="审批人">
         <el-input v-model="scope.search.user" placeholder="审批人"></el-input>
@@ -16,7 +16,10 @@
           <el-input v-model="model.appName"></el-input>
         </el-form-item>
         <el-form-item label="应用描述">
-          <el-input v-model="model.appDesc"></el-input>
+          <el-input v-model="model.clientId"></el-input>
+        </el-form-item>
+        <el-form-item label="应用描述">
+          <ying-select v-model="model.clientId" base="api/user/client/" nameField="appName" keyField="clientId" :multiple="false"></ying-select>
         </el-form-item>
     </template>
     <ying-table-column prop="appName" label="应用名称"></ying-table-column>
