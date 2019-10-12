@@ -21,12 +21,12 @@
     </div>
     <el-table border :data="list" @selection-change="handleSelectionChange" header-row-class-name="ying-table-header" class="ying-table" ref="ying_multiple_table">
       <el-table-column type="selection" width="35">
-      </el-table-column> 
+      </el-table-column>
       <slot></slot>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="setting.actions.length>0">
         <template slot-scope="scope">
-          <el-button type="text" size="small" v-for="(item,i) in setting.actions" :key="i"  @click="triggerCommand(item.name,scope.row)">{{item.text}}</el-button>
-        </template>
+            <el-button type="text" size="small" v-for="(item,i) in setting.actions" :key="i"  @click="triggerCommand(item.name,scope.row)">{{item.text}}</el-button>
+</template>
       </el-table-column>
     </el-table>
     <div class="ying-pagination-wapper">
@@ -35,7 +35,7 @@
     <!-- 编辑对话框 -->
     <el-dialog title="编辑" v-if="edit_model" :visible="true" width="60%" @close="edit_model=null">
       <div>
-        <el-form ref="form" :model="edit_model" label-width="80px">
+        <el-form ref="form" :model="edit_model" :rules="setting.rules" label-width="80px">
           <slot name="edit" :model="edit_model"></slot>
         </el-form>
       </div>
@@ -52,13 +52,13 @@
     name: "YingTable",
     props: {
       base: String,
-      show_toolbar:{
-          type:Boolean,
-          default:true
+      show_toolbar: {
+        type: Boolean,
+        default: true
       },
-      multiple:{
-        type:Boolean,
-        default:true
+      multiple: {
+        type: Boolean,
+        default: true
       },
       formatter: {
         type: Function,
@@ -71,7 +71,7 @@
       },
       config: {
         type: Function,
-        default: function(source,setting) {}
+        default: function(source, setting) {}
       }
     },
     data() {
@@ -85,12 +85,14 @@
         search: {
           name: "wxl"
         },
-        setting:{
-          show_toolbar:true,
-          batch_actions:[],
-          actions:[],
-          methods:[],
-          search:{}
+        setting: {
+          show_toolbar: true,
+          batch_actions: [],
+          actions: [],
+          methods: [],
+          search: {},
+          clearKeys: [],
+          rules: {}
         },
         multiple_selections: [],
         edit_model: null
@@ -109,48 +111,60 @@
         //配置数据源
         this.$dataSource = new DataSource(this.$http);
         //默认配置
-        this.default_config(this.$dataSource,this.setting);
+        this.default_config(this.$dataSource, this.setting);
         //配置
-        this.config(this.$dataSource,this.setting);
+        this.config(this.$dataSource, this.setting);
         //加载数据
         this.loadData();
-        
       },
-      reload(first){
-        first=first||false;
-        if(first){
-          this.pagination.page=1;
+      reload(first) {
+        first = first || false;
+        if (first) {
+          this.pagination.page = 1;
         }
         this.loadData();
       },
-      default_config(source,setting){
-
-        ["page-list","save","delete","find","batch-delete"].map((item)=>{
-            source.add(item,this.base+item);
+      default_config(source, setting) {
+        ["page-list", "save", "delete", "find", "batch-delete"].map((item) => {
+          source.add(item, this.base + item);
         });
-          //操作
-        setting.batch_actions.push({name:"create",text:"创建"});
-        setting.batch_actions.push({name:"batch-delete",text:"批量删除"});
-        
-        setting.actions.push({name:"update",text:"编辑"});
-        setting.actions.push({name:"delete",text:"删除"});
-
+        //操作
+        setting.batch_actions.push({
+          name: "create",
+          text: "创建"
+        });
+        setting.batch_actions.push({
+          name: "batch-delete",
+          text: "批量删除"
+        });
+        setting.actions.push({
+          name: "update",
+          text: "编辑"
+        });
+        setting.actions.push({
+          name: "delete",
+          text: "删除"
+        });
         //绑定操作
         setting.methods = {
-          create: function(table,args){
+          create: function(table, args) {
             table.edit_model = {};
           },
-          update: function(table,row) {
-            table.edit_model = {...row};
+          update: function(table, row) {
+            table.edit_model = { ...row
+            };
+            for (var i = 0; i < setting.clearKeys.length; i++) {
+              var key = setting.clearKeys[i];
+              delete table.edit_model[key];
+            }
           },
-          delete: function(table,row){
+          delete: function(table, row) {
             table.handleDelete(row);
           },
-          "batch-delete": function(table,rows){
+          "batch-delete": function(table, rows) {
             table.handleBatchDelete(rows);
           }
         }
-        
       },
       loadData() {
         this.$dataSource
@@ -164,8 +178,7 @@
               const data = this.formatter(response.data);
               this.list = data.list;
               this.pagination.total = data.total;
-            }
-            else{
+            } else {
               this.$message.error("数据加载失败");
             }
           });
@@ -181,40 +194,44 @@
       triggerCommand(cmd, args) {
         const method = this.setting.methods[cmd];
         if (method && typeof method === 'function') {
-           method(this,args);
+          method(this, args);
         }
       },
       handleSelectionChange(rows) {
-        console.log(rows);  
-        if(!this.multiple){
-          if(rows.length>1){
+        console.log(rows);
+        if (!this.multiple) {
+          if (rows.length > 1) {
             const row = rows.pop();
             this.$refs.ying_multiple_table.clearSelection();
             this.$refs.ying_multiple_table.toggleRowSelection(row);
             this.multiple_selections = [row];
-          }
-          else{
+          } else {
             this.multiple_selections = rows;
-          }  
+          }
+        } else {
+          this.multiple_selections = rows;
         }
-        else{
-          this.multiple_selections = rows;  
-        }
-          
       },
-      getSelections(){
+      getSelections() {
         return this.multiple_selections;
       },
       handleSave(model) {
-        this.$dataSource.post("save", { ...model
-        }).then((response) => {
-          if (response.result) {
-            this.edit_model = null;
-            this.$message.success("保存成功");
-            this.loadData();
-          }
-          else{
-            this.$message.error("保存失败:"+response.message);
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.$dataSource.post("save", {
+              ...model
+            }).then((response) => {
+              if (response.result) {
+                this.edit_model = null;
+                this.$message.success("保存成功");
+                this.loadData();
+              } else {
+                this.$message.error("保存失败:" + response.message);
+              }
+            });
+          } else {
+            console.log('error submit!!');
+            return false;
           }
         });
       },
@@ -249,7 +266,7 @@
             type: 'warning'
           }).then(() => {
             this.$dataSource.post("batch-delete", {
-              ids:ids
+              ids: ids
             }).then((response) => {
               if (response.result) {
                 this.$message.success("删除成功");

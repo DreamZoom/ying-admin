@@ -7,6 +7,7 @@ import table from "./table/table.vue"
 import tableColumn from "./table/table-column.vue"
 
 import select from "./input/select.vue"
+import chose from "./input/chose.vue"
 
 import layout from "./layout.vue";
 
@@ -14,7 +15,8 @@ const components = {
     table,
     tableColumn,
     layout,
-    select
+    select,
+    chose
 };
 
 console.log(components)

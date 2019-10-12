@@ -15,11 +15,12 @@
         <el-form-item label="应用名称">
           <el-input v-model="model.appName"></el-input>
         </el-form-item>
-        <el-form-item label="应用描述">
+        <el-form-item label="应用描述" prop="clientId">
           <el-input v-model="model.clientId"></el-input>
         </el-form-item>
         <el-form-item label="应用描述">
-          <ying-select v-model="model.clientId" base="api/user/client/" nameField="appName" keyField="clientId" :multiple="false"></ying-select>
+          <ying-chose v-model="model.authorizedGrantTypes" :values='[{name:"authorization_code",text:"authorization_code"},{name:"password",text:"password"},{name:"implicit",text:"implicit"},{name:"client_credentials",text:"client_credentials"}]' :multiple="true"></ying-chose>
+          
         </el-form-item>
     </template>
     <ying-table-column prop="appName" label="应用名称"></ying-table-column>
@@ -49,7 +50,13 @@ export default {
           this.log(rows);
         }
 
-        config.search.expression="(name=${name}&&age>${age})&&time>${time}";
+        config.clearKeys=["clientId"];
+
+        config.rules={
+          clientId:[{required: true, message: '请输入ClientId', trigger: 'blur'}]
+        }
+
+        //config.search.expression="(name=${name}&&age>${age})&&time>${time}";
     }
   }
 }

@@ -3,9 +3,7 @@
         <el-button size="small" @click="dialogVisible=true">{{selectText||"请选择"}}</el-button>
         <el-dialog title="选择" :visible.sync="dialogVisible" width="50%" append-to-body>
             <ying-table :base="base" :config="config" :show_toolbar="false" :multiple="multiple" ref="table">
-                <ying-table-column prop="appName" label="应用名称"></ying-table-column>
-                <ying-table-column prop="appDesc" label="应用描述"></ying-table-column>
-                <ying-table-column prop="clientId" label="应用ID"></ying-table-column>
+                <ying-table-column v-for="(item,i) in fields" :key="i" :prop="item.name" :label="item.text"></ying-table-column>
             </ying-table>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -18,10 +16,13 @@
     export default {
         name: "YingSelect",
         props: {
-            base:String,
-            keyField: String,
-            nameField: String,
-            fields: [],
+            base: String,
+            // keyField: String,
+            // nameField: String,
+            fields: {
+                type: Array,
+                default: () => []
+            },
             multiple: {
                 type: Boolean,
                 default: false
@@ -32,6 +33,8 @@
         },
         data() {
             return {
+                keyField: "",
+                nameField: "",
                 dialogVisible: false,
                 selections: [],
             }
@@ -54,15 +57,32 @@
                 }
             }
         },
-        watch:{
-            "value":(newValue,oldValue)=>{
-                if(newValue){
+        watch: {
+            value(newValue, oldValue) {
+                if (newValue&& newValue!=oldValue) {
                     this.loadValue(newValue);
                 }
-                console.log(oldValue);
             }
         },
-        mounted(){
+        mounted() {
+            if (this.fields.length == 1) {
+                this.fields.unshift({
+                    name: "id",
+                    text: "编号"
+                });
+            } else if (this.fields.length == 0) {
+                this.fields.push({
+                    name: "id",
+                    text: "编号"
+                });
+                this.fields.push({
+                    name: "name",
+                    text: "名称"
+                });
+                console.warn("you should setting fields in this component");
+            }
+            this.keyField = this.fields[0].name;
+            this.nameField = this.fields[1].name;
             this.loadValue(this.value);
         },
         methods: {
@@ -76,13 +96,16 @@
                 this.selections = this.$refs.table.getSelections();
                 this.bindValue();
             },
-            loadValue(keyValue){
-                 var url = this.base +"find-by-keys";
-                 this.$http.get(url,{key:this.keyField,values:keyValue}).then((response)=>{
-                     if(response.result){
-                         this.selections = response.data;
-                     }
-                 })
+            loadValue(keyValue) {
+                var url = this.base + "find-by-keys";
+                this.$http.get(url, {
+                    key: this.keyField,
+                    values: keyValue
+                }).then((response) => {
+                    if (response.result) {
+                        this.selections = response.data;
+                    }
+                })
             },
             bindValue() {
                 var value = "";
