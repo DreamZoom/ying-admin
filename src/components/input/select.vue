@@ -3,7 +3,7 @@
         <el-button size="small" @click="dialogVisible=true">{{selectText||"请选择"}}</el-button>
         <el-dialog title="选择" :visible.sync="dialogVisible" width="50%" append-to-body>
             <ying-table :base="base" :config="config" :show_toolbar="false" :multiple="multiple" ref="table">
-                <ying-table-column v-for="(item,i) in fields" :key="i" :prop="item.name" :label="item.text"></ying-table-column>
+                <ying-table-column v-for="(item,i) in columns" :key="i" :prop="item.name" :label="item.text"></ying-table-column>
             </ying-table>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -20,7 +20,7 @@
             // keyField: String,
             // nameField: String,
             fields: {
-                type: Array,
+                type: [Array, Object],
                 default: () => []
             },
             multiple: {
@@ -28,7 +28,7 @@
                 default: false
             },
             value: {
-                type: String
+                type: [String, Number]
             }
         },
         data() {
@@ -55,34 +55,53 @@
                     }
                     return "";
                 }
+            },
+            columns() {
+                let cols = this.fields;
+                if (!(this.fields instanceof Array)) {
+                    //如果参数是object
+                    cols=[];
+                    for (const key in this.fields) {
+                        if (this.fields.hasOwnProperty(key)) {
+                            const val = this.fields[key];
+                            cols.push({
+                                name: key,
+                                text: val
+                            })
+                        }
+                    }
+                }
+                if (cols.length == 1) {
+                    cols.unshift({
+                        name: "id",
+                        text: "编号"
+                    });
+                } else if (cols.length == 0) {
+                    cols.push({
+                        name: "id",
+                        text: "编号"
+                    });
+                    cols.push({
+                        name: "name",
+                        text: "名称"
+                    });
+                    console.warn("you should setting fields in this component");
+                }
+
+                return cols;
             }
         },
         watch: {
             value(newValue, oldValue) {
-                if (newValue&& newValue!=oldValue) {
+                if (newValue && newValue != oldValue) {
                     this.loadValue(newValue);
                 }
             }
         },
         mounted() {
-            if (this.fields.length == 1) {
-                this.fields.unshift({
-                    name: "id",
-                    text: "编号"
-                });
-            } else if (this.fields.length == 0) {
-                this.fields.push({
-                    name: "id",
-                    text: "编号"
-                });
-                this.fields.push({
-                    name: "name",
-                    text: "名称"
-                });
-                console.warn("you should setting fields in this component");
-            }
-            this.keyField = this.fields[0].name;
-            this.nameField = this.fields[1].name;
+            const cols = this.columns;
+            this.keyField = cols[0].name;
+            this.nameField = cols[1].name;
             this.loadValue(this.value);
         },
         methods: {
@@ -109,6 +128,7 @@
             },
             bindValue() {
                 var value = "";
+                var model=this.selections;
                 if (this.multiple) {
                     var val_list = [];
                     this.selections.map((val) => {
@@ -116,6 +136,7 @@
                     });
                     value = val_list.join(",");
                 } else {
+                    model = this.selections.length>0?this.selections[0]:null;
                     console.log(this.selections);
                     if (this.selections.length > 0) {
                         const val = this.selections[0];
@@ -125,6 +146,7 @@
                     }
                 }
                 this.$emit('input', value);
+                this.$emit('change', model);
             }
         }
     }

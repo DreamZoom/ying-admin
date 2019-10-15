@@ -20,7 +20,7 @@
         </el-form-item>
         <el-form-item label="应用描述">
           <ying-chose v-model="model.authorizedGrantTypes" :values='[{name:"authorization_code",text:"authorization_code"},{name:"password",text:"password"},{name:"implicit",text:"implicit"},{name:"client_credentials",text:"client_credentials"}]' :multiple="true"></ying-chose>
-          
+          <ying-select v-model="model.clientId" base="api/user/account/" :fields="[{name:'id',text:'编号'},{name:'username',text:'用户'}]"></ying-select>
         </el-form-item>
     </template>
     <ying-table-column prop="appName" label="应用名称"></ying-table-column>
