@@ -8,6 +8,7 @@ import tableColumn from "./table/table-column.vue"
 
 import select from "./input/select.vue"
 import chose from "./input/chose.vue"
+import upload from "./input/upload.vue"
 
 import layout from "./layout.vue";
 
@@ -16,7 +17,8 @@ const components = {
     tableColumn,
     layout,
     select,
-    chose
+    chose,
+    upload
 };
 
 console.log(components)

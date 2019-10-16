@@ -30,11 +30,11 @@
         },
          watch: {
             value(newValue, oldValue) {
-                this.bindValue(newValue);
+                this.bindValue(newValue||"");
             }
         },
         mounted(){
-            this.bindValue(this.value);
+            this.bindValue(this.value||"");
         },
         methods: {
             bindValue(value){
