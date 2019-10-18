@@ -1,15 +1,16 @@
 <template>
     <div class="ying-layout-container">
         <div class="ying-layout-header" :style="header_style">
-            <div class="ying-layout-actions">
+            <!-- <div class="ying-layout-actions">
                 <i v-if="!side_collapse" class="action-item el-icon-s-fold" @click="toggetSide"></i>
                 <i v-if="side_collapse" class="action-item el-icon-s-unfold" @click="toggetSide"></i>
                 <i class="action-item" v-for="(item,i) in setting.tools" :key="i" :class="bindToolClass(item)" @click="handleToolClick(item)"></i>
+            </div> -->
+            <div class="ying-layout-main-menu">
+                <slot name="main-menu"></slot>
             </div>
-            <div class="ying-horizontal-menu">
-                <el-menu mode="horizontal">
-                    <slot name="header-menu"></slot>
-                </el-menu>
+            <div class="ying-layout-tools-menu">
+                <slot name="tools-menu"></slot>
             </div>
         </div>
         <div class="ying-layout-side" :style="site_style">
@@ -123,14 +124,24 @@
         cursor: pointer;
         color: #888;
     }
-    .ying-layout-actions .action-item:hover {
+      .ying-layout-actions .action-item:hover {
         color: #000;
     }
-    .ying-horizontal-menu {
+   
+    .ying-layout-main-menu {
+        float: left;
+    }
+    .ying-layout-main-menu .el-menu-item,
+    .ying-layout-main-menu .el-submenu__title {
+        height: 49px !important;
+        line-height: 49px !important;
+    }
+  
+    .ying-layout-tools-menu {
         float: right;
     }
-    .ying-horizontal-menu .el-menu-item,
-    .ying-horizontal-menu .el-submenu__title {
+    .ying-layout-tools-menu .el-menu-item,
+    .ying-layout-tools-menu .el-submenu__title {
         height: 49px !important;
         line-height: 49px !important;
     }

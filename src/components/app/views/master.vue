@@ -1,48 +1,40 @@
 <template>
-  <div id="app">
-    <ying-layout :config="config">
-      <div slot="logo">管理控制台</div>
-      <div slot="side-menu">
-        <ying-menu :menus="$store.state.menus"></ying-menu>
-      </div>
-      <div slot="header-menu">
-        <el-menu-item index="1">
-          消息中心 ({{$store.state.count}})</el-menu-item>
-        <el-submenu index="2">
-          <div slot="title">{{$store.getters.username}}</div>
-          <el-menu-item index="2-1">修改密码</el-menu-item>
-          <el-menu-item index="2-2">注销登录</el-menu-item>
-        </el-submenu>
-      </div>
-      <router-view/>
-    </ying-layout>
-  </div>
+  <ying-layout :config="config">
+    <div slot="logo">管理控制台</div>
+    <div slot="main-menu">
+      <component :is="$store.getters.main_menus"></component>
+    </div>
+    <div slot="side-menu">
+       <component :is="$store.getters.slide_menus"></component>
+    </div>
+    <div slot="tools-menu">
+      <component @select="handleClick" :is="$store.getters.tools_menus"></component>  
+    </div>
+    <router-view/>
+  </ying-layout>
 </template>
 
 <script>
   import menu from "./menu";
+  import Vue from "vue";
   export default {
     name: 'App',
-    components:{
-      YingMenu:menu
+    components: {
+      YingMenu: menu
+    },
+    data() {
+      return {
+        main_menus: null
+      }
+    },
+    mounted() {
     },
     methods: {
       config(setting) {
-        setting.tools.push({
-          icon: "el-icon-s-opportunity",
-          click: (item) => {
-            console.log(item);
-          }
-        });
-        setting.tools.push({
-          icon: "el-icon-setting",
-          click: (item) => {
-            console.log(this);
-          }
-        });
-        setting.menu.router = true;
-        setting.menu["default-active"] = this.$route.path;
-        console.log(this.$route)
+    
+      },
+      handleClick(){
+        console.log(111);
       }
     }
   }

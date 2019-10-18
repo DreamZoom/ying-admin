@@ -9,6 +9,7 @@ import store from './app/store';
 
 import master from './app/views/master.vue';
 import empty from './app/views/empty.vue';
+import app from './app/views/app.vue';
 
 Vue.use(ElementUI, {
 	size: 'small'
@@ -24,64 +25,58 @@ export default class App {
     options={};
 
 	constructor(appId) {
-		this.appId = appId;
-	}
+        this.appId = appId;
+        
 
-	config(options) {
-		this.options={
-            ...options
-        };
+       
 	}
 
 	
+
+    addMenu(parent, name, title, icon,action) {
+        store.commit("addMenu", {
+            parent,
+            name,
+            title,
+            icon,
+            action
+        })
+    }
+    addRoutes(routes){
+        router.addRoutes(routes);
+    }
     
-
-    buildRoute(menus,paths){
-        menus =menus||[];
-        console.log(menus);
-        
-        const routes = menus.map((item)=>{
-            let i_path= paths.slice()
-            i_path.push(item.name);
-            item.path="/"+i_path.join("/");
-            var r = {
-                path:item.name,
-                name: i_path.join("_"),
-                component: item.component,
-                meta: {
-                    requireAuth: item.auth 
-                }
-            };
-            if(item.childs){
-                r.children = this.buildRoute(item.childs,i_path);
-                r.component =empty;
-            }
-            return  r;
-        });
-
-        return routes;
+    addRoute(path,component,childs){
+        router.addRoutes([{
+            path: path,
+			name: path.replace("/","_"),
+            component: component,
+            children:childs
+        }]);
     }
 
-	run() {
+    nav(path){
+        router.push(path);
+    }
 
-        var menus=this.options.menus||[];
+	run(configFunc) {
 
-        store.commit('setMenus', menus);
-        const routes = this.buildRoute(menus,[]);
-        console.log(routes);
+        if(typeof configFunc=="function"){
+            configFunc.call(this,this);
+        }
 
         router.addRoutes([{
             path: '/',
 			name: 'main',
             component: master,
-            children:routes
         }]);
 
 		this.instance = new Vue({
 			el: this.appId,
 			store,
-			router,
-			template: '<router-view />'
+            router,
+            components: { app },
+			template: '<app />'
 		});
 		return this.instance;
 	}
