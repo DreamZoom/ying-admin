@@ -26,7 +26,7 @@
       <el-table-column label="操作" v-if="setting.actions.length>0">
         <template slot-scope="scope">
             <el-button type="text" size="small" v-for="(item,i) in setting.actions" :key="i"  @click="triggerCommand(item.name,scope.row)">{{item.text}}</el-button>
-</template>
+        </template>
       </el-table-column>
     </el-table>
     <div class="ying-pagination-wapper">

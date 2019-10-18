@@ -12,6 +12,8 @@ import upload from "./input/upload.vue"
 
 import layout from "./layout.vue";
 
+import app from "./app";
+
 const components = {
     table,
     tableColumn,
@@ -24,27 +26,23 @@ const components = {
 console.log(components)
 
 const install = function(Vue, opts = {}) {
-	//locale.use(opts.locale);
-    //locale.i18n(opts.i18n);
-   
-
     Object.keys(components).forEach((key)=>{
          const component =components[key];
          Vue.component(component.name, component);
     })
 
     Vue.prototype.$http=opts.http || http;
-    
-
 };
 
 /* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
-	install(window.Vue);
+    install(window.Vue);
+    window.app=app;
 }
 
 export default {
     version: '0.0.0.1',
     install,
-    DataSource
+    DataSource,
+    app
 };

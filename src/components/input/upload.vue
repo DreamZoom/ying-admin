@@ -1,10 +1,16 @@
 <template>
-    <el-upload class="upload-demo" :action="action" multiple :limit="3" :show-file-list="false" :on-success="handleUploadSuccess">
+    <el-upload class="upload-demo" :action="action" multiple  :show-file-list="false" :on-success="handleUploadSuccess">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">
-            <div v-for="(item,i) in files" :key="i">
-                {{item}}
-            </div>
+            <ul class="el-upload-list" :class="{'el-upload-list--picture':type=='image'}" v-for="(item,i) in files" :key="i">
+                <li class="el-upload-list__item is-success">
+                    <img :src="item" :alt="item" class="el-upload-list__item-thumbnail" :style="size" v-if="type=='image'">
+                    <a class="el-upload-list__item-name" v-if="type=='file'"><i class="el-icon-document"></i>{{item}}</a>
+                    <label class="el-upload-list__item-status-label"><i class="el-icon-upload-success el-icon-check"></i></label>
+                    <i class="el-icon-close" @click="handleClose(i)"></i>
+                </li>
+                
+            </ul>
         </div>
     </el-upload>
 </template>
@@ -16,11 +22,19 @@
                 type: Boolean,
                 default: false
             },
+            avater: {
+                type: Boolean,
+                default: false
+            },
             type: {
                 type: String,
-                default: "file"// type enum file,image
+                default: "file" // type enum file,image,avater
             },
             value: String,
+            size: {
+                type: Object,
+                default: {}
+            },
             action: {
                 type: String,
                 default: function() {
@@ -42,10 +56,10 @@
         mounted() {
             this.bindValue(this.value);
         },
-        watch:{
-            value(newValue,oldValue){
-                if(newValue!=oldValue){
-                    this.files=[];
+        watch: {
+            value(newValue, oldValue) {
+                if (newValue != oldValue) {
+                    this.files = [];
                     this.bindValue(newValue);
                 }
             }
@@ -72,6 +86,10 @@
                         this.files.push(value);
                     }
                 }
+            },
+            handleClose(i){
+                this.files.splice(i,1);
+                this.$emit("input", this.files.join(","));
             }
         }
     }

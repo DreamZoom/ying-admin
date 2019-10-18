@@ -20,11 +20,11 @@
         </el-form-item>
         <el-form-item label="应用描述">
           <ying-chose v-model="model.authorizedGrantTypes" :values='[{name:"authorization_code",text:"authorization_code"},{name:"password",text:"password"},{name:"implicit",text:"implicit"},{name:"client_credentials",text:"client_credentials"}]' :multiple="true"></ying-chose>
-          <!-- <ying-select v-model="model.clientId" base="api/user/account/" :fields="[{name:'id',text:'编号'},{name:'username',text:'用户'}]"></ying-select> -->
-          <ying-upload multiple></ying-upload>
+          <!-- <ying-select v-model="model.clientId" base="api/user/account/" :fields="[{name:'id',text:'编号'},{name:'username',text:'用户'}]"></ying-select>  -->
+          <ying-upload multiple  type="image" avater  :size="{width:'200px'}" ></ying-upload>
         </el-form-item>
     </template>
-    <ying-table-column prop="appName" label="应用名称"></ying-table-column>
+    <ying-table-column prop="appName" label="应用名称" image :size="{width:'200px',height:'200px'}"></ying-table-column>
     <ying-table-column prop="appDesc" label="应用描述"></ying-table-column>
     <ying-table-column prop="clientId" label="应用ID"></ying-table-column>
   </ying-table>
