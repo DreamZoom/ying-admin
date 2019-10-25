@@ -1,5 +1,5 @@
 <template>
-  <ying-layout :config="config">
+  <ying-layout :config="config" :side="$store.getters.side">
     <div slot="logo">管理控制台</div>
     <div slot="main-menu">
       <component :is="$store.getters.main_menus"></component>
@@ -8,7 +8,7 @@
        <component :is="$store.getters.slide_menus"></component>
     </div>
     <div slot="tools-menu">
-      <component @select="handleClick" :is="$store.getters.tools_menus"></component>  
+      <component :is="$store.getters.tools_menus"></component>  
     </div>
     <router-view/>
   </ying-layout>
@@ -32,9 +32,6 @@
     methods: {
       config(setting) {
     
-      },
-      handleClick(){
-        console.log(111);
       }
     }
   }

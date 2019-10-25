@@ -12,7 +12,7 @@ import upload from "./input/upload.vue"
 
 import layout from "./layout.vue";
 
-import app from "./app";
+import app from "./app/app";
 
 const components = {
     table,
@@ -20,7 +20,8 @@ const components = {
     layout,
     select,
     chose,
-    upload
+    upload,
+    app
 };
 
 console.log(components)
@@ -37,12 +38,10 @@ const install = function(Vue, opts = {}) {
 /* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
     install(window.Vue);
-    window.app=app;
 }
 
 export default {
     version: '0.0.0.1',
     install,
-    DataSource,
-    app
+    DataSource
 };

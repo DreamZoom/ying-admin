@@ -22,12 +22,11 @@ let combMenu = (menus,mode) => {
 	var template = menus.map((item) => {
 		if (item.childs) {
 			var child_template = combMenu(item.childs);
-			return `<el-submenu index="${item.name}"><div slot="title"><i class="${item.icon}"></i><span>${item.title}</span></div> ${child_template}</el-submenu>`;
+			return `<el-submenu index="${item.name}"><template slot="title"><i class="${item.icon}"></i><span>${item.title}</span></template> ${child_template}</el-submenu>`;
 		} else {
 			return `<el-menu-item index="${item.name}"> <i class="${item.icon}"></i><span>${item.title}</span></el-menu-item>`;
 		}
 	}).join("");
-	console.log(template);
 	return template;
 };
 
@@ -59,7 +58,8 @@ const state = {
 				childs: []
 			}
 		],
-		routes:[]
+		routes:[],
+		hideSide:false
 	}
 };
 
@@ -76,7 +76,7 @@ const getters = {
 	slide_menus(state) {
 		var menus = findMenu(state.app.menus, 'slide').childs;
 		var template = combMenu(menus);
-		template = `<el-menu @select="handleSelect" mode="vertical" background-color="#20222A" text-color="#fff" active-text-color="#ffd04b">${template}</el-menu>`;
+		template = `<el-menu @select="handleSelect" mode="vertical" :collapse="$store.getters.side" :collapse-transition="false" background-color="#20222A" text-color="#fff" active-text-color="#ffd04b">${template}</el-menu>`;
 		return { template ,methods:{handleSelect(index,indexPath){this.$store.commit('tiggerMenu',{index,indexPath})}}};
 	},
 	tools_menus(state) {
@@ -84,6 +84,13 @@ const getters = {
 		var template = combMenu(menus);
 		template = `<el-menu @select="handleSelect" mode="horizontal">${template}<el-submenu index="2"><div slot="title">{{$store.getters.username}}</div><el-menu-item index="2-1">修改密码</el-menu-item><el-menu-item index="2-2">注销登录</el-menu-item></el-submenu></el-menu>`;
 		return { template,methods:{handleSelect(index,indexPath){this.$store.commit('tiggerMenu',{index,indexPath})}} };
+	},
+	routes(state){
+		return state.app.routes;
+	},
+	side(state){
+		console.log(state.app.hideSide);
+		return state.app.hideSide;
 	}
 };
 
@@ -104,9 +111,21 @@ const mutations = {
 		console.log(menu);
 		var p = findMenu(state.app.menus, menu.index);
 		if(p && p.action){
-			p.action(menu);
+			p.action(p);
 		}
-
+	},
+	toggleSide(state,show){
+		
+		if(show!=undefined){
+			state.app.hideSide = show;
+		}
+		else{
+			state.app.hideSide=!state.app.hideSide;
+		}
+		
+	},
+	addRoute(state, route){
+		state.app.routes.push({...route});
 	},
 	setClient(state, client_id, client_secret) {
 		state.client_id = client_id;

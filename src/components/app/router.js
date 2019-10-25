@@ -2,11 +2,11 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
 import login from './views/login.vue';
+
 Vue.use(Router);
 
 const router = new Router({
 	routes: [
-
 		{
 			path: '/login',
 			name: 'login',
@@ -14,6 +14,7 @@ const router = new Router({
 		}
 	]
 });
+
 
 router.beforeEach(async (to, from, next) => {
 	//const store = router.app.$store;

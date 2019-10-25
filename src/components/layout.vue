@@ -2,10 +2,10 @@
     <div class="ying-layout-container">
         <div class="ying-layout-header" :style="header_style">
             <!-- <div class="ying-layout-actions">
-                <i v-if="!side_collapse" class="action-item el-icon-s-fold" @click="toggetSide"></i>
-                <i v-if="side_collapse" class="action-item el-icon-s-unfold" @click="toggetSide"></i>
-                <i class="action-item" v-for="(item,i) in setting.tools" :key="i" :class="bindToolClass(item)" @click="handleToolClick(item)"></i>
-            </div> -->
+                        <i v-if="!side_collapse" class="action-item el-icon-s-fold" @click="toggetSide"></i>
+                        <i v-if="side_collapse" class="action-item el-icon-s-unfold" @click="toggetSide"></i>
+                        <i class="action-item" v-for="(item,i) in setting.tools" :key="i" :class="bindToolClass(item)" @click="handleToolClick(item)"></i>
+                    </div> -->
             <div class="ying-layout-main-menu">
                 <slot name="main-menu"></slot>
             </div>
@@ -20,9 +20,10 @@
                 </slot>
             </div>
             <div class="ying-menu">
-                <el-menu background-color="#20222A" text-color="#fff" active-text-color="#ffd04b" :collapse="side_collapse" :collapse-transition="false" v-bind="setting.menu">
-                    <slot name="side-menu"></slot>
-                </el-menu>
+                <slot name="side-menu"></slot>
+                <!-- <el-menu background-color="#20222A" text-color="#fff" active-text-color="#ffd04b" :collapse="side" :collapse-transition="false" v-bind="setting.menu">
+                    
+                </el-menu> -->
             </div>
         </div>
         <div class="ying-layout-main" :style="main_style">
@@ -37,39 +38,42 @@
             config: {
                 type: Function,
                 default: function(setting) {}
+            },
+            side: {
+                type:Boolean,
+                default:false
             }
         },
         data() {
             return {
-                side_collapse:false,
                 setting: {
-                    tools:[],
-                    menu:{}
+                    tools: [],
+                    menu: {}
                 }
             }
         },
         mounted() {
             this.init();
         },
-        computed:{
-            site_style(){
-                if(this.side_collapse){
+        computed: {
+            site_style() {
+                if (this.side) {
                     return {
-                        width:"65px"
+                        width: "65px"
                     }
                 }
             },
-            header_style(){
-                if(this.side_collapse){
+            header_style() {
+                if (this.side) {
                     return {
-                        left:"65px"
+                        left: "65px"
                     }
                 }
             },
-            main_style(){
-                if(this.side_collapse){
+            main_style() {
+                if (this.side) {
                     return {
-                        left:"65px"
+                        left: "65px"
                     }
                 }
             }
@@ -78,16 +82,16 @@
             init() {
                 this.config(this.setting);
             },
-            toggetSide(){
-                this.side_collapse=!this.side_collapse;
+            toggetSide() {
+                this.side = !this.side;
             },
-            bindToolClass(item){
+            bindToolClass(item) {
                 let c = {};
-                c[item.icon]=true;
+                c[item.icon] = true;
                 return c;
             },
-            handleToolClick(item){
-                if(item&&item.click&& typeof item.click==="function"){
+            handleToolClick(item) {
+                if (item && item.click && typeof item.click === "function") {
                     item.click(item);
                 }
             }
@@ -124,10 +128,9 @@
         cursor: pointer;
         color: #888;
     }
-      .ying-layout-actions .action-item:hover {
+    .ying-layout-actions .action-item:hover {
         color: #000;
     }
-   
     .ying-layout-main-menu {
         float: left;
     }
@@ -136,7 +139,6 @@
         height: 49px !important;
         line-height: 49px !important;
     }
-  
     .ying-layout-tools-menu {
         float: right;
     }
@@ -169,7 +171,6 @@
     .ying-layout-side .ying-menu {
         margin-top: 50px;
     }
-
     .ying-layout-main {
         position: absolute;
         left: 220px;
@@ -178,5 +179,13 @@
         bottom: 0px;
         padding: 10px;
         overflow-y: scroll;
+    }
+    .el-menu--horizontal>.el-menu-item.is-active {
+        border-bottom: 2px solid transparent;
+        color: #303133;
+    }
+    .el-menu--horizontal>.el-submenu.is-active .el-submenu__title {
+        border-bottom: 2px solid transparent;
+        color: #303133;
     }
 </style>
