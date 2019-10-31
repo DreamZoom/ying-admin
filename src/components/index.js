@@ -9,6 +9,7 @@ import tableColumn from "./table/table-column.vue"
 import select from "./input/select.vue"
 import chose from "./input/chose.vue"
 import upload from "./input/upload.vue"
+import richEditor from "./input/rich-editor.vue"
 
 import layout from "./layout.vue";
 
@@ -21,7 +22,8 @@ const components = {
     select,
     chose,
     upload,
-    app
+    app,
+    richEditor
 };
 
 console.log(components)

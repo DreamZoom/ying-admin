@@ -11,7 +11,7 @@
     methods: {
       config(context) {
 
-        context.addRoute("/user",table);
+        context.addRoute("user",table);
        
         
         context.addMenu('main', 'file', '文件', 'el-icon-eleme');
