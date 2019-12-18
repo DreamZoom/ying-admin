@@ -1,5 +1,6 @@
 <template>
   <ying-app :config="config">
+     <menu></menu>
   </ying-app>
 </template>
 
