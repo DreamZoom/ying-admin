@@ -1,5 +1,6 @@
 <template>
-  <ying-app :config="config"></ying-app>
+  <ying-app :config="config">
+  </ying-app>
 </template>
 
 <script>

@@ -4,7 +4,6 @@
 <script>
 import router from "./router";
 import store from "./store";
-
 import master from "./views/master.vue";
 export default {
   name: "YingApp",
