@@ -19,8 +19,8 @@ import layout from "../layout";
 import Vue from "vue";
 export default {
   name: "App",
-  components:{
-      layout
+  components: {
+    layout
   },
   data() {
     return {

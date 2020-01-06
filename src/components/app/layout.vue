@@ -32,21 +32,21 @@ export default {
   store,
   computed: {
     site_style() {
-      if (this.side) {
+      if (this.$store.getters.slide) {
         return {
           width: "65px"
         };
       }
     },
     header_style() {
-      if (this.side) {
+      if (this.$store.getters.slide) {
         return {
           left: "65px"
         };
       }
     },
     main_style() {
-      if (this.side) {
+      if (this.$store.getters.slide) {
         return {
           left: "65px"
         };

@@ -10,9 +10,12 @@ export default {
   name: "App",
   methods: {
     config(context) {
-      context.addRoute("user", table);
+      context.route({
+        path:"/user",
+        component:table
+      });
 
-      context.config_menu("main", [
+      context.menu("main", [
         {
           name: "file",
           title: "文件",
@@ -39,7 +42,7 @@ export default {
         }
       ]);
 
-      context.config_menu("slide", [
+      context.menu("slide", [
         {
           name: "wjxt",
           title: "问卷系统",

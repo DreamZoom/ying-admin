@@ -1,17 +1,17 @@
 <template>
-  <router-view />
+   <component :is="innerView" />
 </template>
 <script>
-import router from "./router";
+import Router from "vue-router";
 import store from "./store";
+import router from "./router";
 import master from "./views/master.vue";
+import login from "./views/login.vue";
+
+let masters = {};
+
 export default {
   name: "YingApp",
-  router,
-  store,
-  mounted() {
-    //this.addMenu("message", "sys_msg", "系统消息", "");
-  },
   props: {
     config: {
       type: Function,
@@ -20,33 +20,28 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     this.init();
+  },
+  data() {
+    return {
+      innerView:{template:"<p>welcome</p>"},
+      masters: {},
+      routes: []
+    };
   },
   methods: {
     init() {
+      this.master("main", master);
       this.config(this);
-      router.addRoutes([
-        {
-          path: "/",
-          name: "main",
-          component: master,
-          children: store.getters.routes
-        }
-      ]);
+      this.innerView = {
+        router,
+        store,
+        template: "<router-view />"
+      };
+      console.log(this.innerView);
     },
-    addRoutes(routes) {
-      router.addRoutes(routes);
-    },
-    addRoute(path, component, childs) {
-      store.commit("addRoute", {
-        path: path,
-        name: path.replace("/", "_"),
-        component: component,
-        children: childs
-      });
-    },
-    config_menu(key, menus) {
+    menu(key, menus) {
       store.commit("menu", {
         key,
         menus
@@ -54,6 +49,19 @@ export default {
     },
     push(location) {
       this.$router.push(location);
+    },
+    route(options) {
+      if (options.master && masters[options.master]) {
+        var master = masters[options.master];
+        options.component = {
+          template: "<master><page /></master>",
+          components: { master: master, page: options.component }
+        };
+      }
+      router.addRoutes([options]);
+    },
+    master(key, component) {
+      masters[key] = component;
     }
   }
 };
