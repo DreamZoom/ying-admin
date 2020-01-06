@@ -11,14 +11,12 @@ import chose from "./input/chose.vue"
 import upload from "./input/upload.vue"
 import richEditor from "./input/rich-editor.vue"
 
-import layout from "./layout.vue";
 
 import app from "./app/app";
 
 const components = {
     table,
     tableColumn,
-    layout,
     select,
     chose,
     upload,
