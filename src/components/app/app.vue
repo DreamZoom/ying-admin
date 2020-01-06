@@ -16,6 +16,7 @@ export default {
       console.log(this);
     this.init();
   },
+  
   props: {
     config: {
       type: Function,
