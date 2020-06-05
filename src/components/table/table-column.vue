@@ -1,7 +1,7 @@
 <template>
   <el-table-column :prop="prop" :label="label">
     <template slot-scope="scope" >
-      <slot ...scope>
+      <slot scope>
         <img v-if="image" :src="scope.row[scope.column.property]" :alt="scope.row[scope.column.property]"  :style="size" >
         <span v-if="!image">
           {{scope.row[scope.column.property]}}

@@ -12,6 +12,7 @@ import upload from "./input/upload.vue"
 import richEditor from "./input/rich-editor.vue"
 
 
+
 import app from "./app/app";
 
 const components = {

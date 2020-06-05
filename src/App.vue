@@ -5,12 +5,11 @@
 
 <script>
 import table from "@/views/table";
-import layout from "@/views/layout";
 export default {
   name: "App",
   methods: {
     config(context) {
-      context.addRoute("user", table);
+      context.addRoute("user", table,null,true);
 
       context.config_menu("main", [
         {
@@ -45,10 +44,20 @@ export default {
           title: "问卷系统",
           icon: "el-icon-eleme",
           action: () => {
+            console.log("user");
             context.push("/user");
+          }
+        },{
+           name: "explorer",
+          title: "文件浏览器",
+          icon: "el-icon-eleme",
+          action: () => {
+            console.log("explorer");
+            context.push("/explorer");
           }
         }
       ]);
+      
     }
   }
 };

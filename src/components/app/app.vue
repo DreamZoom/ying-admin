@@ -5,6 +5,7 @@
 import router from "./router";
 import store from "./store";
 import master from "./views/master.vue";
+import changepassword from "./views/changepassword.vue";
 export default {
   name: "YingApp",
   router,
@@ -24,6 +25,30 @@ export default {
   methods: {
     init() {
       this.config(this);
+
+      this.addRoute("/changepassword",changepassword,null,true);
+      this.config_menu(
+        "userinfo",
+        [
+          {
+            name: "change_password",
+            title: "修改密码",
+            icon: "el-icon-eleme",
+            action: () => {
+              this.push("/changepassword");
+            }
+          },
+          {
+            name: "logout",
+            title: "退出登录",
+            icon: "el-icon-eleme",
+            action: () => {
+              store.commit("logout");
+              this.push("/login");
+            }
+          }
+        ]
+      );
       router.addRoutes([
         {
           path: "/",
@@ -36,18 +61,22 @@ export default {
     addRoutes(routes) {
       router.addRoutes(routes);
     },
-    addRoute(path, component, childs) {
+    addRoute(path, component, childs, requireAuth) {
       store.commit("addRoute", {
         path: path,
         name: path.replace("/", "_"),
         component: component,
-        children: childs
+        children: childs,
+        meta: {
+          requireAuth
+        }
       });
     },
-    config_menu(key, menus) {
+    config_menu(key, menus, template) {
       store.commit("menu", {
         key,
-        menus
+        menus,
+        template
       });
     },
     push(location) {

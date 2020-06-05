@@ -44,7 +44,7 @@
                             return this.$config.upload_action;
                         }
                     }
-                    return "http://localhost:38081/api/store/file/upload";
+                    return "/api/store/file/upload";
                 }
             }
         },
