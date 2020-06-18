@@ -45,7 +45,6 @@
                 option-label-prop="value"
               >
                 <template slot="dataSource">
-                  
                   <a-select-option key="all" disabled class="show-all">
                     <a
                       href="https://www.google.com/search?q=ant-design-vue"
@@ -62,7 +61,8 @@
             <div class="ying-app-header-right-action">
               <a-dropdown>
                 <div>
-                  <a-icon type="user" />admin
+                  <a-icon type="user" />
+                  <span>admin</span>
                 </div>
 
                 <a-menu slot="overlay">
@@ -97,9 +97,9 @@
           </div>
         </div>
       </a-layout-header>
-      <a-layout-content
-        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
-      >Content</a-layout-content>
+      <a-layout-content>
+        
+      </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
@@ -109,7 +109,7 @@ export default {
   data() {
     return {
       collapsed: false,
-      dataSource: ['Burns Bay Road', 'Downing Street', 'Wall Street'],
+      dataSource: ["Burns Bay Road", "Downing Street", "Wall Street"]
     };
   }
 };
