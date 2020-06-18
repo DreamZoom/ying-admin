@@ -4,6 +4,10 @@ import Vue from 'vue';
 import App from './App';
 
 
+import YingUI from './components/index';
+
+Vue.config.productionTip = false;
+Vue.use(YingUI);
 
 /* eslint-disable no-new */
 new Vue({

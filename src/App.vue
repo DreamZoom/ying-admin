@@ -1,16 +1,17 @@
 <template>
-  <div>
-    hello
-  </div>
+  <ying-app></ying-app>
 </template>
 
 <script>
 export default {
   name: "App",
+  data() {
+    return {
+      collapsed: false
+    };
+  },
   methods: {
-    config(context) {
-     
-    }
+    config(context) {}
   }
 };
 </script>
