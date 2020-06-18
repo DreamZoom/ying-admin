@@ -18,7 +18,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
 	//const store = router.app.$store;
-	console.log(store);
+	console.log(to);
 	if (to.matched.some((record) => record.meta.requireAuth)) {
 		// 检查是否需要登录权限
 		if (!store.state.user.authenticated) {

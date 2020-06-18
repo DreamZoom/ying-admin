@@ -210,6 +210,11 @@ export default {
       };
     },
     loadData() {
+
+      if(this.tree){
+        this.pagination.size=100000000;
+      }
+
       this.$dataSource
         .get("page-list", {
           page: this.pagination.page - 1,

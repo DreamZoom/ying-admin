@@ -1,6 +1,5 @@
 <template>
-  <ying-app :config="config">
-  </ying-app>
+  <ying-app :config="config"></ying-app>
 </template>
 
 <script>
@@ -9,9 +8,9 @@ export default {
   name: "App",
   methods: {
     config(context) {
-      context.addRoute("user", table,null,true);
+      context.route("user", table,null,true);
 
-      context.config_menu("main", [
+      context.menu("main", [
         {
           name: "file",
           title: "文件",
@@ -38,7 +37,7 @@ export default {
         }
       ]);
 
-      context.config_menu("slide", [
+      context.menu("slide", [
         {
           name: "wjxt",
           title: "问卷系统",
@@ -46,14 +45,6 @@ export default {
           action: () => {
             console.log("user");
             context.push("/user");
-          }
-        },{
-           name: "explorer",
-          title: "文件浏览器",
-          icon: "el-icon-eleme",
-          action: () => {
-            console.log("explorer");
-            context.push("/explorer");
           }
         }
       ]);

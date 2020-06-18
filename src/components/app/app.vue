@@ -1,15 +1,16 @@
 <template>
-  <router-view />
+   <router-view />
 </template>
 <script>
-import router from "./router";
+import Router from "vue-router";
 import store from "./store";
+import router from "./router";
 import master from "./views/master.vue";
 import changepassword from "./views/changepassword.vue";
 export default {
   name: "YingApp",
-  router,
   store,
+  router,
   props: {
     config: {
       type: Function,
@@ -18,16 +19,22 @@ export default {
       }
     }
   },
-  mounted() {},
-  created() {
+  mounted() {
     this.init();
+  },
+  data() {
+    return {
+      innerView:{template:"<router-view />"},
+      masters: {},
+      routes: []
+    };
   },
   methods: {
     init() {
       this.config(this);
 
-      this.addRoute("/changepassword",changepassword,null,true);
-      this.config_menu(
+      this.route("/changepassword",changepassword,null,true);
+      this.menu(
         "userinfo",
         [
           {
@@ -57,11 +64,13 @@ export default {
           children: store.getters.routes
         }
       ]);
+
+
     },
     addRoutes(routes) {
       router.addRoutes(routes);
     },
-    addRoute(path, component, childs, requireAuth) {
+    route(path, component, childs, requireAuth) {
       store.commit("addRoute", {
         path: path,
         name: path.replace("/", "_"),
@@ -72,7 +81,7 @@ export default {
         }
       });
     },
-    config_menu(key, menus, template) {
+    menu(key, menus, template) {
       store.commit("menu", {
         key,
         menus,
