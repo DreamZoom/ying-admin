@@ -7,30 +7,18 @@
       :trigger="null"
       collapsible
     >
-      <div class="ying-app-logo" />
-      <a-menu theme="dark" mode="inline" :default-selected-keys="['1']">
-        <a-menu-item key="1">
-          <a-icon type="user" />
-          <span>nav 1</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <a-icon type="video-camera" />
-          <span>nav 2</span>
-        </a-menu-item>
-        <a-menu-item key="3">
-          <a-icon type="upload" />
-          <span>nav 3</span>
-        </a-menu-item>
+      <div class="ying-app-logo" >
+          <a><img :src="$store.state.logo" alt="logo"><h1 v-if="!collapsed">{{$store.state.title}}</h1></a>
+      </div>
+      <a-menu theme="dark" mode="inline">
+        <component :is="$store.getters.menus"></component>
       </a-menu>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
         <div class="ying-app-header">
-          <span class="ying-app-trigger">
-            <a-icon
-              :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-              @click="collapsed = !collapsed"
-            />
+          <span class="ying-app-trigger" @click="collapsed = !collapsed">
+            <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
           </span>
           <div class="ying-app-header-right">
             <div class="ying-app-header-right-action">
@@ -62,7 +50,7 @@
               <a-dropdown>
                 <div>
                   <a-icon type="user" />
-                  <span>admin</span>
+                  <span>{{$store.state.user.name}}</span>
                 </div>
 
                 <a-menu slot="overlay">
@@ -98,14 +86,13 @@
         </div>
       </a-layout-header>
       <a-layout-content>
-        
+        <router-view></router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
 export default {
-  name: "YingApp",
   data() {
     return {
       collapsed: false,
@@ -114,16 +101,40 @@ export default {
   }
 };
 </script>
-
 <style>
 .ying-app {
   height: 100%;
   position: relative;
 }
 .ying-app-logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
+  position: relative;
+  padding: 0 24px;
+  overflow: hidden;
+  background: #001529;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.ying-app-logo>a {
+    display: flex;
+    align-items: center;
+    height: 64px;
+}
+.ying-app-logo img {
+    display: inline-block;
+    height: 32px;
+    vertical-align: middle;
+}
+.ying-app-logo h1 {
+    display: inline-block;
+    margin: 0 0 0 12px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 20px;
+    vertical-align: middle;
+    animation: fade-in;
+    animation-duration: .3s;
+    text-overflow: hidden;
+    white-space: nowrap;
 }
 .ying-app-trigger {
   height: 64px;
@@ -158,6 +169,7 @@ export default {
   padding: 0 12px;
   cursor: pointer;
   transition: all 0.3s;
+  font-size: 16px;
 }
 .ying-app-header-right-action:hover {
   background-color: #efefef;

@@ -4,7 +4,9 @@ import Vue from 'vue';
 import App from './App';
 
 
-import YingUI from './components/index';
+import YingUI from './framework/index';
+
+import mock from "./mock/index";
 
 Vue.config.productionTip = false;
 Vue.use(YingUI);

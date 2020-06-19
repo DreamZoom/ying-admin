@@ -1,8 +1,9 @@
 <template>
-  <ying-app></ying-app>
+  <ying-app :config="config"></ying-app>
 </template>
 
 <script>
+import config from "./config"
 export default {
   name: "App",
   data() {
@@ -11,7 +12,9 @@ export default {
     };
   },
   methods: {
-    config(context) {}
+    config() {
+      return Promise.resolve(config);
+    }
   }
 };
 </script>

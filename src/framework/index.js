@@ -1,18 +1,24 @@
 import Vue from 'vue';
 import antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
+import VueRouter from 'vue-router'
+import Vuex from 'vuex'
 
 
 import YingApp from "./ying-app";
+import PageWapper from "./components/page-wapper";
+
 
 const components = {
-    YingApp
+    YingApp,
+    PageWapper
 };
 
 console.log(components)
 
 const install = function(Vue, opts = {size:"large" }) {
-
+    Vue.use(VueRouter);
+    Vue.use(Vuex);
     Vue.use(antd,opts);
 
     Object.keys(components).forEach((key)=>{
