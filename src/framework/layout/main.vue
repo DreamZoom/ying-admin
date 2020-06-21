@@ -24,29 +24,27 @@
           </span>
           <div class="ying-app-header-right">
             <div class="ying-app-header-right-action">
-              <a-auto-complete
-                class="certain-category-search"
-                dropdown-class-name="certain-category-search-dropdown"
-                :dropdown-match-select-width="false"
-                :dropdown-style="{ width: '300px' }"
-                size="large"
-                style="width: 100%"
-                placeholder="input here"
-                option-label-prop="value"
-              >
-                <template slot="dataSource">
-                  <a-select-option key="all" disabled class="show-all">
-                    <a
-                      href="https://www.google.com/search?q=ant-design-vue"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >View all results</a>
-                  </a-select-option>
-                </template>
-                <a-input>
-                  <a-icon slot="suffix" type="search" class="certain-category-icon" />
-                </a-input>
-              </a-auto-complete>
+              <a-dropdown :trigger="['click']">
+                <div>
+                  <a-icon type="bell" />
+                  <span>消息</span>
+                </div>
+                <a-card slot="overlay">
+                  <a-list item-layout="horizontal" :data-source="data">
+                    <a-list-item slot="renderItem" slot-scope="item">
+                      <a-list-item-meta
+                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                      >
+                        <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
+                        <a-avatar
+                          slot="avatar"
+                          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                        />
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </a-list>
+                </a-card>
+              </a-dropdown>
             </div>
             <div class="ying-app-header-right-action" v-if="$store.getters.login">
               <a-dropdown>
@@ -56,7 +54,6 @@
                 </div>
 
                 <a-menu slot="overlay">
-                  
                   <a-menu-item>
                     <router-link :to="{path:'/changepassword'}">修改密码</router-link>
                   </a-menu-item>
@@ -96,7 +93,21 @@ export default {
   data() {
     return {
       collapsed: false,
-      dataSource: ["Burns Bay Road", "Downing Street", "Wall Street"]
+      dataSource: ["Burns Bay Road", "Downing Street", "Wall Street"],
+      data: [
+        {
+          title: "Ant Design Title 1"
+        },
+        {
+          title: "Ant Design Title 2"
+        },
+        {
+          title: "Ant Design Title 3"
+        },
+        {
+          title: "Ant Design Title 4"
+        }
+      ]
     };
   },
   methods: {
