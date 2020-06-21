@@ -4,9 +4,8 @@
 <script>
 import Vuex from "vuex";
 import VueRouter from "vue-router";
-import Mainlayout from "./layout/main";
 import app_store from "./store/app";
-import utils from "./utils";
+import {message} from "ant-design-vue";
 export default {
   name: "YingApp",
   props: {
@@ -17,10 +16,44 @@ export default {
   },
   computed: {
     app() {
+      const store = new Vuex.Store({ ...this.stores });
       const router = new VueRouter({
         routes: this.routes
       });
-      const store = new Vuex.Store({ ...this.stores });
+
+      router.beforeEach((to, from, next) => {
+        console.log(to);
+        if (
+          to.meta &&
+          to.meta.authority &&
+          to.meta.authority instanceof Array &&
+          to.meta.authority.length > 0
+        ) {
+          console.log(to.meta.authority);
+          //判断是否登录
+          if (!store.getters.login) {
+            next({
+              path: "/login"
+            });
+          } else {
+            //求两个权限的交集
+            let intersection = store.getters.authority.filter(function(val) {
+              return to.meta.authority.indexOf(val) > -1;
+            });
+            if (intersection.length == 0) {
+              //判断是否有权限
+              // next(from);
+              message.warning(`对不起，您没有权限访问 ${to.name}。`)
+              next(false);
+            } else {
+              next();
+            }
+          }
+        } else {
+          next();
+        }
+      });
+
       return {
         router,
         store,
@@ -44,20 +77,41 @@ export default {
         const childs = config.routes || [];
         const routes = [
           {
+            path: "/login",
+            component: () => import("./views/login")
+          },
+          {
             path: "/",
-            component: Mainlayout,
-            children: childs
+            component: () => import("./layout/main"),
+            children: [{
+              path:"/changepassword",
+              component:()=>import("./views/changepassword")
+            }].concat(childs) 
           }
         ];
         this.routes = routes;
         const menus = this.buildMenus(childs);
-        this.stores = utils.extend(app_store, {
+        const { state, getters, mutations, actions, modules } = app_store;
+        this.stores = {
           state: {
+            ...state,
             menus,
             title: config.title,
             logo: config.logo
+          },
+          getters: {
+            ...getters
+          },
+          mutations: {
+            ...mutations
+          },
+          actions: {
+            ...actions
+          },
+          modules: {
+            ...modules
           }
-        },config.store);
+        };
       });
     },
     buildMenus(routes) {

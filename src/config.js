@@ -10,7 +10,11 @@ export default {
             path: "/",
             name: "首页",
             icon: "home",
-            component: home
+            component: home,
+            meta:{
+                // authority: ['admin'],
+            }
+            
         },
         {
             path: "/channel",

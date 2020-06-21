@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
-Mock.mock("/api/user/login","post",(req, res) => {
+Mock.mock("/api/user/login","get",(req, res) => {
     res.send({
         name:"@name",
         token:"@token",

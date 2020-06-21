@@ -6,7 +6,7 @@ import App from './App';
 
 import YingUI from './framework/index';
 
-import mock from "./mock/index";
+// import mock from "./mock/index";
 
 Vue.config.productionTip = false;
 Vue.use(YingUI);

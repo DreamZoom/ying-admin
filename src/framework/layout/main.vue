@@ -6,13 +6,15 @@
       v-model="collapsed"
       :trigger="null"
       collapsible
+      :theme="$store.state.theme"
     >
-      <div class="ying-app-logo" >
-          <a><img :src="$store.state.logo" alt="logo"><h1 v-if="!collapsed">{{$store.state.title}}</h1></a>
+      <div class="ying-app-logo" :class="$store.state.theme">
+        <a>
+          <img :src="$store.state.logo" alt="logo" />
+          <h1 v-if="!collapsed">{{$store.state.title}}</h1>
+        </a>
       </div>
-      <a-menu theme="dark" mode="inline">
-        <component :is="$store.getters.menus"></component>
-      </a-menu>
+      <component :is="$store.getters.menus"></component>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
@@ -46,23 +48,21 @@
                 </a-input>
               </a-auto-complete>
             </div>
-            <div class="ying-app-header-right-action">
+            <div class="ying-app-header-right-action" v-if="$store.getters.login">
               <a-dropdown>
                 <div>
                   <a-icon type="user" />
-                  <span>{{$store.state.user.name}}</span>
+                  <span>{{$store.state.user.username}}</span>
                 </div>
 
                 <a-menu slot="overlay">
+                  
                   <a-menu-item>
-                    <a href="javascript:;">个人中心</a>
-                  </a-menu-item>
-                  <a-menu-item>
-                    <a href="javascript:;">修改密码</a>
+                    <router-link :to="{path:'/changepassword'}">修改密码</router-link>
                   </a-menu-item>
                   <a-menu-divider />
                   <a-menu-item>
-                    <a href="javascript:;">退出</a>
+                    <a @click="logout">退出</a>
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
@@ -70,14 +70,14 @@
             <div class="ying-app-header-right-action">
               <a-dropdown>
                 <a class="ant-dropdown-link">
-                  <a-icon type="global" />
+                  <a-icon type="dashboard" />
                 </a>
                 <a-menu slot="overlay">
                   <a-menu-item>
-                    <a href="javascript:;">中文</a>
+                    <a @click="setTheme('dark')">黑色经典</a>
                   </a-menu-item>
                   <a-menu-item>
-                    <a href="javascript:;">english</a>
+                    <a @click="setTheme('light')">白色通用</a>
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
@@ -98,6 +98,16 @@ export default {
       collapsed: false,
       dataSource: ["Burns Bay Road", "Downing Street", "Wall Street"]
     };
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push({ path: "/login" });
+      });
+    },
+    setTheme(theme) {
+      this.$store.commit("setTheme", theme);
+    }
   }
 };
 </script>
@@ -110,31 +120,41 @@ export default {
   position: relative;
   padding: 0 24px;
   overflow: hidden;
-  background: #001529;
+
   cursor: pointer;
   transition: all 0.3s;
 }
-.ying-app-logo>a {
-    display: flex;
-    align-items: center;
-    height: 64px;
+.ying-app-logo.dark {
+  background: #001529;
+}
+.ying-app-logo.light {
+  background: #fff;
+  color: #001529;
+}
+.ying-app-logo > a {
+  display: flex;
+  align-items: center;
+  height: 64px;
 }
 .ying-app-logo img {
-    display: inline-block;
-    height: 32px;
-    vertical-align: middle;
+  display: inline-block;
+  height: 32px;
+  vertical-align: middle;
 }
 .ying-app-logo h1 {
-    display: inline-block;
-    margin: 0 0 0 12px;
-    color: #fff;
-    font-weight: 600;
-    font-size: 20px;
-    vertical-align: middle;
-    animation: fade-in;
-    animation-duration: .3s;
-    text-overflow: hidden;
-    white-space: nowrap;
+  display: inline-block;
+  margin: 0 0 0 12px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 20px;
+  vertical-align: middle;
+  animation: fade-in;
+  animation-duration: 0.3s;
+  text-overflow: hidden;
+  white-space: nowrap;
+}
+.ying-app-logo.light h1 {
+  color: #001529;
 }
 .ying-app-trigger {
   height: 64px;
