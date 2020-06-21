@@ -29,21 +29,23 @@
                   <a-icon type="bell" />
                   <span>消息</span>
                 </div>
-                <a-card slot="overlay">
-                  <a-list item-layout="horizontal" :data-source="data">
-                    <a-list-item slot="renderItem" slot-scope="item">
-                      <a-list-item-meta
-                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                      >
-                        <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
-                        <a-avatar
-                          slot="avatar"
-                          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                        />
-                      </a-list-item-meta>
-                    </a-list-item>
-                  </a-list>
-                </a-card>
+                <div slot="overlay">
+                  <a-card>
+                    <a-list item-layout="horizontal" :data-source="data">
+                      <a-list-item slot="renderItem" slot-scope="item">
+                        <a-list-item-meta
+                          description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                        >
+                          <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
+                          <a-avatar
+                            slot="avatar"
+                            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                          />
+                        </a-list-item-meta>
+                      </a-list-item>
+                    </a-list>
+                  </a-card>
+                </div>
               </a-dropdown>
             </div>
             <div class="ying-app-header-right-action" v-if="$store.getters.login">
