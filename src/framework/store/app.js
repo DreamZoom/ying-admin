@@ -15,7 +15,7 @@ export default {
     state: {
         theme: "dark",
         menus: [],
-        messages: [],
+        messages: [{title:"系统通知",content:"页面已删除",time:""}],
         title: "Ying Admin Console",
         logo: logo,
         user: null,
@@ -67,6 +67,14 @@ export default {
                 return state.user.authority;
             }
             return [];
+        },
+        messages(state){
+            if(state.messages && state.messages instanceof Array && state.messages.length){
+                return state.messages;
+            }
+            else{
+               var messages = JSON.parse(window.localStorage.getItem("messages")||"[]");
+            }
         }
     },
     mutations: {
@@ -90,12 +98,16 @@ export default {
             window.localStorage.removeItem("token");
         },
         pushMessage(state, message) {
-
             const { title, content, time } = message;
             state.messages.push({
-                title, content, time
+                title, content, time,read:false
             });
-
+            window.localStorage.setItem("messages",JSON.stringify(state.messages));
+        },
+        readMessage(state, message){
+            message.read=true;
+            window.localStorage.setItem("messages",JSON.stringify(state.messages));
+            return message;
         }
     },
     actions: {

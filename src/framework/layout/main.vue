@@ -26,21 +26,15 @@
             <div class="ying-app-header-right-action">
               <a-dropdown :trigger="['click']">
                 <div>
-                  <a-icon type="bell" />
+                  <a-icon type="mail" />
                   <span>消息</span>
                 </div>
                 <div slot="overlay">
                   <a-card>
-                    <a-list item-layout="horizontal" :data-source="data">
+                    <a-list item-layout="horizontal" :data-source="$store.getters.messages">
                       <a-list-item slot="renderItem" slot-scope="item">
-                        <a-list-item-meta
-                          description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                        >
-                          <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
-                          <a-avatar
-                            slot="avatar"
-                            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                          />
+                        <a-list-item-meta :description="item.content">
+                          <a slot="title" >{{ item.title }}</a>
                         </a-list-item-meta>
                       </a-list-item>
                     </a-list>
