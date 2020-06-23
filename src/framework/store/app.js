@@ -11,9 +11,11 @@ function make_menus(menus) {
 }
 import logo from "../../assets/logo.svg"
 import request from "../utils/request";
+
+const theme = window.localStorage.getItem("theme");
 export default {
     state: {
-        theme: "dark",
+        theme: theme||"dark",
         menus: [],
         messages: [{title:"系统通知",content:"页面已删除",time:""}],
         title: "Ying Admin Console",
@@ -26,7 +28,7 @@ export default {
             const template = make_menus(state.menus);
             console.log(template);
             return {
-                template: `<a-menu mode="inline" :theme="$store.state.theme" @click="onClick" :selectedKeys="current">${template}</a-menu>`,
+                template: `<a-menu mode="inline" :theme="$store.getters.theme" @click="onClick" :selectedKeys="current">${template}</a-menu>`,
                 data() {
                     return {
                         current: ["/"],
@@ -75,11 +77,15 @@ export default {
             else{
                var messages = JSON.parse(window.localStorage.getItem("messages")||"[]");
             }
+        },
+        theme(state){
+            return state.theme;
         }
     },
     mutations: {
         setTheme(state, theme) {
             state.theme = theme;
+            window.localStorage.setItem('theme', theme);
         },
         setMenus(state, menus) {
             state.menus = menus;
@@ -100,14 +106,14 @@ export default {
         pushMessage(state, message) {
             const { title, content, time } = message;
             state.messages.push({
-                title, content, time,read:false
+                title, content, time
             });
             window.localStorage.setItem("messages",JSON.stringify(state.messages));
         },
-        readMessage(state, message){
-            message.read=true;
+        removeMessage(state, message){
+            state.messages.splice(state.messages.indexOf(message),1);
+            state.messages= [].concat(state.messages);
             window.localStorage.setItem("messages",JSON.stringify(state.messages));
-            return message;
         }
     },
     actions: {

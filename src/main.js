@@ -5,11 +5,16 @@ import App from './App';
 
 
 import YingUI from './framework/index';
+const  {BaseService} = YingUI;
 
-// import mock from "./mock/index";
+//  import mock from "./mock/index";
+ require('./mock/index.js')
 
 Vue.config.productionTip = false;
 Vue.use(YingUI);
+
+const service =new BaseService({controller:"news/channel"});
+service.query({page:1,size:20});
 
 /* eslint-disable no-new */
 new Vue({

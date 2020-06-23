@@ -6,9 +6,9 @@
       v-model="collapsed"
       :trigger="null"
       collapsible
-      :theme="$store.state.theme"
+      :theme="$store.getters.theme"
     >
-      <div class="ying-app-logo" :class="$store.state.theme">
+      <div class="ying-app-logo" :class="$store.getters.theme">
         <a>
           <img :src="$store.state.logo" alt="logo" />
           <h1 v-if="!collapsed">{{$store.state.title}}</h1>
@@ -24,18 +24,20 @@
           </span>
           <div class="ying-app-header-right">
             <div class="ying-app-header-right-action">
-              <a-dropdown :trigger="['click']">
+              <a-dropdown :trigger="['click']" >
                 <div>
                   <a-icon type="mail" />
                   <span>消息</span>
                 </div>
-                <div slot="overlay">
-                  <a-card>
+                <div slot="overlay"  >
+                  <a-card class="ying-message-list" @click="e => e.stopPropagation()">
                     <a-list item-layout="horizontal" :data-source="$store.getters.messages">
-                      <a-list-item slot="renderItem" slot-scope="item">
+                      <a-list-item class="ying-message-item" slot="renderItem" slot-scope="item">
                         <a-list-item-meta :description="item.content">
-                          <a slot="title" >{{ item.title }}</a>
+                          <a slot="title">{{ item.title }}</a>
                         </a-list-item-meta>
+                        <a slot="actions" @click="showMessage(item)">详情</a>
+                        <a slot="actions" @click="removeMessage(item)">删除</a>
                       </a-list-item>
                     </a-list>
                   </a-card>
@@ -48,7 +50,6 @@
                   <a-icon type="user" />
                   <span>{{$store.state.user.username}}</span>
                 </div>
-
                 <a-menu slot="overlay">
                   <a-menu-item>
                     <router-link :to="{path:'/changepassword'}">修改密码</router-link>
@@ -114,6 +115,13 @@ export default {
     },
     setTheme(theme) {
       this.$store.commit("setTheme", theme);
+    },
+    showMessage(message) {
+      const { title, content } = message;
+      this.$info({ title,content});
+    },
+    removeMessage(message){
+      this.$store.commit("removeMessage", message);
     }
   }
 };
@@ -200,5 +208,11 @@ export default {
 }
 .ying-app-header-right-action:hover {
   background-color: #efefef;
+}
+.ying-message-list {
+  min-width: 350px;
+}
+.ying-message-item {
+  border-bottom: solid 1px #eee !important;
 }
 </style>
