@@ -30,6 +30,6 @@ export default class{
 
     query(params){
         const api = this.getBaseApi().query;
-        return request.post(api,params);
+        return request.get(api,params);
     }
 }
