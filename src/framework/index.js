@@ -7,11 +7,17 @@ import Vuex from 'vuex'
 
 import YingApp from "./ying-app";
 import PageWapper from "./components/page-wapper";
+import YingTable from "./components/table";
+import YingSearchForm from "./components/search-form";
+import YingSearchFormItem from "./components/search-form-item";
 
 import BaseService from "./service/service";
 const components = {
     YingApp,
-    PageWapper
+    PageWapper,
+    YingTable,
+    YingSearchForm,
+    YingSearchFormItem
 };
 
 console.log(components)

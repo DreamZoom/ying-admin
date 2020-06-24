@@ -13,6 +13,10 @@ export default class{
         }
     }
 
+    columns(){
+        return [];
+    }
+
     save(params){
         const api = this.getBaseApi().save;
         return request.post(api,params);
@@ -29,7 +33,8 @@ export default class{
     }
 
     query(params){
+        console.log(params);
         const api = this.getBaseApi().query;
-        return request.get(api,params);
+        return request.post(api,params);
     }
 }
