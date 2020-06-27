@@ -12,6 +12,7 @@ import YingSearchForm from "./components/search-form";
 import YingSearchFormItem from "./components/search-form-item";
 
 import BaseService from "./service/service";
+import ActionModal from "./utils/modal";
 const components = {
     YingApp,
     PageWapper,
@@ -42,5 +43,6 @@ if (typeof window !== 'undefined' && window.Vue) {
 export default {
     version: '0.0.0.1',
     install,
-    BaseService
+    BaseService,
+    ActionModal
 };

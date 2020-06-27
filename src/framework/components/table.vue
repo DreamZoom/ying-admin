@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card>
+    <a-card v-if="advancedSearch">
       <ying-search-form @search="handleSearch">
         <template slot-scope="{model}">
           <ying-search-item label="用户名">
@@ -15,27 +15,20 @@
           <ying-search-item label="等级">
             <a-input v-model="model.level" placeholder="username" />
           </ying-search-item>
-          <ying-search-item label="备注">
-            <a-input v-model="model.remark" placeholder="username" />
+          <ying-search-item label="等级">
+            <a-input v-model="model.level" placeholder="username" />
           </ying-search-item>
         </template>
       </ying-search-form>
     </a-card>
-    <div class="divider-line"></div>
+    <div class="divider-line" v-if="advancedSearch"></div>
     <a-card>
       <div class="ant-pro-table-toolbar">
         <div class="ant-pro-table-toolbar-title">{{title}}</div>
         <div class="ant-pro-table-toolbar-option">
           <div class="ant-space ant-space-horizontal ant-space-align-center">
-            <div class="ant-space-item">
-              <a-button type="primary">
-                <a-icon type="plus" />
-                <span>新建</span>
-              </a-button>
-              <a-button type="danger">
-                <a-icon type="delete" />
-                <span>删除</span>
-              </a-button>
+            <div class="ant-space-item ying-table-batch-actions">
+              <slot name="batch-action" :rows="selected_rows"></slot>
             </div>
           </div>
         </div>
@@ -49,9 +42,8 @@
         :data-source="list"
         @change="handleChange"
       >
-        <span slot="action" slot-scope="text, record">
-          <a-button type="link" @click="handleAction(text, record)">编辑</a-button>
-          <a-button type="link" @click="handleAction(text, record)">删除</a-button>
+        <span slot="actions" slot-scope="record">
+          <slot name="action" :record="record"></slot>
         </span>
         <slot></slot>
       </a-table>
@@ -66,7 +58,11 @@ export default {
       type: Function,
       default: function() {}
     },
-    title: String
+    title: String,
+    advancedSearch: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -76,12 +72,22 @@ export default {
         current: 1,
         pageSize: 20
       },
+      selected_rows:[],
       loading: false
     };
   },
   computed: {
     rowSelection() {
-      return {};
+      return {
+        onChange: (selectedRowKeys, selectedRows) => {
+          this.selected_rows = selectedRows;
+          console.log(
+            `selectedRowKeys: ${selectedRowKeys}`,
+            "selectedRows: ",
+            selectedRows
+          );
+        }
+      };
     }
   },
   mounted() {
@@ -93,7 +99,7 @@ export default {
       this.columns.push({
         title: "操作",
         key: "action",
-        scopedSlots: { customRender: "action" }
+        scopedSlots: { customRender: "actions" }
       });
       this.handleChange(this.pagination, {}, {});
     },
@@ -125,9 +131,7 @@ export default {
       console.log(model);
       this.handleChange({ current: 1 }, { ...model }, {});
     },
-    handleAction(){
-
-    }
+    handleAction() {}
   }
 };
 </script>
@@ -164,5 +168,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+
+.ying-table-batch-actions > * {
+  margin-left: 10px;
 }
 </style>

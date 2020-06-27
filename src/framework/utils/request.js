@@ -44,9 +44,10 @@ request.interceptors.response.use(function (response) {
         const { data } = response;
         const errorText = codeMessage[response.status] || response.statusText;
         notification.error({
-            message: `请求错误 ${response.status}:${errorText}`,
-            description: `${JSON.stringify(data)}`,
+            message: `请求错误 ${response.status}:`,
+            description: `${errorText}`,
         });
+        console.warn(data)
     } else if (!response) {
         notification.error({
             description: '您的网络发生异常，无法连接服务器',
