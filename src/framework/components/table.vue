@@ -3,21 +3,7 @@
     <a-card v-if="advancedSearch">
       <ying-search-form @search="handleSearch">
         <template slot-scope="{model}">
-          <ying-search-item label="用户名">
-            <a-input v-model="model.username" placeholder="username" />
-          </ying-search-item>
-          <ying-search-item label="昵称">
-            <a-input v-model="model.nickname" placeholder="username" />
-          </ying-search-item>
-          <ying-search-item label="身份证号">
-            <a-input v-model="model.idcard" placeholder="username" />
-          </ying-search-item>
-          <ying-search-item label="等级">
-            <a-input v-model="model.level" placeholder="username" />
-          </ying-search-item>
-          <ying-search-item label="等级">
-            <a-input v-model="model.level" placeholder="username" />
-          </ying-search-item>
+          <slot name="search" :model="model"></slot>
         </template>
       </ying-search-form>
     </a-card>
@@ -58,11 +44,7 @@ export default {
       type: Function,
       default: function() {}
     },
-    title: String,
-    advancedSearch: {
-      type: Boolean,
-      default: false
-    }
+    title: String
   },
   data() {
     return {
@@ -77,6 +59,9 @@ export default {
     };
   },
   computed: {
+    advancedSearch(){
+        return this.$scopedSlots.search;
+    },
     rowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
@@ -91,6 +76,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this);
     this.init();
   },
   methods: {

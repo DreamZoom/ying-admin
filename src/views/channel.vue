@@ -1,6 +1,23 @@
 <template>
   <ying-page-wapper>
     <ying-table :service="service" title="栏目列表">
+      <template slot="search" slot-scope="{model}">
+        <ying-search-item label="用户名">
+          <a-input v-model="model.username" placeholder="username" />
+        </ying-search-item>
+        <ying-search-item label="昵称">
+          <a-input v-model="model.nickname" placeholder="username" />
+        </ying-search-item>
+        <ying-search-item label="身份证号">
+          <a-input v-model="model.idcard" placeholder="username" />
+        </ying-search-item>
+        <ying-search-item label="等级">
+          <a-input v-model="model.level" placeholder="username" />
+        </ying-search-item>
+        <ying-search-item label="等级">
+          <a-input v-model="model.level" placeholder="username" />
+        </ying-search-item>
+      </template>
       <template slot="batch-action" slot-scope="{rows}">
         <a-button type="primary" @click="modal().form()">
           <a-icon type="plus" />创建
