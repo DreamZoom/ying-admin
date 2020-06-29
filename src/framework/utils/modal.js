@@ -1,20 +1,20 @@
 import { Modal } from "ant-design-vue";
 
 export default class {
-    constructor({ template, title, rules, service }={}) {
+    constructor({ template, title, rules, service } = {}) {
         this.template = template || "";
         this.title = title || "编辑";
         this.rules = rules || [];
         this.service = service;
     }
 
-    form({create=true,model}={}) {
+    form({ create = true, model } = {}) {
         const EditModal = {
             props: {
                 form: Object,
-                create:{
-                    type:Boolean,
-                    default:true
+                create: {
+                    type: Boolean,
+                    default: true
                 }
             },
             template:
@@ -29,60 +29,78 @@ export default class {
         }
         console.log(model);
         const self = this;
-        Modal.confirm({
-            width: "60%",
-            okText: '确认',
-            cancelText: '取消',
-            title: this.title,
-            content: h => (<EditModal form={form} create={create} />),
-            onOk() {
-                self.service.save(form).then((response) => {
-                    console.log(response);
-                })
-                console.log('OK');
-            },
-            onCancel() {
-                console.log('Cancel');
-            }
+
+        return new Promise((reslove, reject) => {
+            Modal.confirm({
+                width: "60%",
+                okText: '确认',
+                cancelText: '取消',
+                title: this.title,
+                content: h => (<EditModal form={form} create={create} />),
+                onOk() {
+                    self.service.save(form).then((response) => {
+                        reslove("ok");
+                    },()=>{
+                        reject("error");
+                    })  
+                },
+                onCancel() {
+                    reject("cancel");
+                }
+            });
+
         });
+
     }
 
-    delete({model}={}){
+    delete({ model } = {}) {
         const self = this;
-        Modal.confirm({
-            okText: '确认',
-            cancelText: '取消',
-            title: "删除记录",
-            content: h => (<span>确定要删除此记录么？</span>),
-            onOk() {
-                self.service.delete(model).then((response) => {
-                    console.log(response);
-                })
-                console.log('OK');
-            },
-            onCancel() {
-                console.log('Cancel');
-            }
+        return new Promise((reslove, reject) => {
+            Modal.confirm({
+                okText: '确认',
+                cancelText: '取消',
+                title: "删除记录",
+                content: h => (<span>确定要删除此记录么？</span>),
+                onOk() {
+                    self.service.delete(model).then((response) => {
+                        reslove("ok");
+                    },()=>{
+                        reject("error");
+                    })
+                    
+                },
+                onCancel() {
+                    reject("cancel");
+                }
+            });
+
         });
     }
 
-    batchDelete({rows=[]}={}){
+    batchDelete({ rows = [] } = {}) {
         console.log(rows);
         const self = this;
-        Modal.confirm({
-            okText: '确认',
-            cancelText: '取消',
-            title: "删除记录",
-            content: h => (<span>确定要删除这些记录么？</span>),
-            onOk() {
-                self.service.delete(rows).then((response) => {
-                    console.log(response);
-                })
-                console.log('OK');
-            },
-            onCancel() {
-                console.log('Cancel');
-            }
+        const ids = rows.map(item=>item.id);
+
+        return new Promise((reslove, reject) => {
+            Modal.confirm({
+                okText: '确认',
+                cancelText: '取消',
+                title: "删除记录",
+                content: h => (<span>确定要删除这些记录么？</span>),
+                onOk() {
+                    self.service.delete({ids}).then((response) => {
+                        reslove("ok");
+                    },()=>{
+                        reject("error");
+                    });
+                },
+                onCancel() {
+                    reject("cancel");
+                }
+            });
+
         });
+
     }
 }

@@ -45,16 +45,7 @@ export default class {
         }
         console.log(params);
         const api = this.getBaseApi().query;
-        return request.post(api, params).then((response) => {
-
-            response.data = {
-                list: response.data.content,
-                records: response.data.totalElements,
-                page: response.data.number,
-                size: response.data.size
-            }
-            return Promise.resolve(response);
-        });
+        return request.post(api, params);
     }
 
     list(params) {

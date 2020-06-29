@@ -1,6 +1,6 @@
+import SpringBaseService from './SpringBaseService';
 import framework from '../framework/index';
 const { BaseService } = framework;
-
 export default new class extends BaseService {
     constructor() {
         super({ controller: "news/channel" })
@@ -19,4 +19,5 @@ export default new class extends BaseService {
             ],
         },]
     }
+
 };

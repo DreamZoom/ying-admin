@@ -54,13 +54,15 @@ export default {
         current: 1,
         pageSize: 20
       },
-      selected_rows:[],
-      loading: false
+      selected_rows: [],
+      loading: false,
+      filters: {},
+      sorter: {}
     };
   },
   computed: {
-    advancedSearch(){
-        return this.$scopedSlots.search;
+    advancedSearch() {
+      return this.$scopedSlots.search;
     },
     rowSelection() {
       return {
@@ -90,7 +92,9 @@ export default {
       this.handleChange(this.pagination, {}, {});
     },
     handleChange(pagination, filters, sorter) {
-      console.log(pagination);
+      this.filters = filters;
+      this.sorter = sorter;
+
       const pager = { ...this.pagination };
       pager.current = pagination.current;
       this.pagination = pager;
@@ -114,10 +118,11 @@ export default {
         });
     },
     handleSearch(model) {
-      console.log(model);
-      this.handleChange({ current: 1 }, { ...model }, {});
+      this.handleChange({ current: 1 }, { ...model }, this.sorter);
     },
-    handleAction() {}
+    refresh() {
+      this.handleChange(this.pagination, this.filters, this.sorter);
+    }
   }
 };
 </script>
