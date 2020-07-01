@@ -38,3 +38,31 @@ Mock.mock("/api/news/channel/page-list", (request) => {
         size: 20
     });
 });
+
+
+Mock.mock("/api/news/channel/list", (request) => {
+    console.log(request);
+    const root = Mock.mock({
+        "list|10": [{
+            'id|+1': 1,
+            name: "@name",
+            parentId:0
+        }]
+    });
+
+    let l2 = [];
+
+    root.list.map((item,i)=>{
+        const it = Mock.mock({
+            "list|3-8": [{
+                'id|+1': 10*(item.id+1)+1,
+                name: "@name",
+                parentId:item.id
+            }]
+        })
+        l2 = l2.concat(it.list);
+    });
+    l2 = l2.concat(root.list);
+    
+    return l2;
+});
