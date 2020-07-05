@@ -10,6 +10,7 @@ import PageWapper from "./components/page-wapper";
 import YingTable from "./components/table";
 import YingSearchForm from "./components/search-form";
 import YingSearchFormItem from "./components/search-form-item";
+import YingTree from "./components/tree";
 
 import BaseService from "./service/service";
 import ActionModal from "./utils/modal";
@@ -18,7 +19,8 @@ const components = {
     PageWapper,
     YingTable,
     YingSearchForm,
-    YingSearchFormItem
+    YingSearchFormItem,
+    YingTree
 };
 
 console.log(components)
