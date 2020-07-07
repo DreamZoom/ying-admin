@@ -1,23 +1,23 @@
 <template>
   <a-row :gutter="16">
     <a-col :span="6">
-      <a-card>
-        <div>
-          <a-button icon="plus">添加</a-button>
-          <a-button icon="delete">删除</a-button>
+      <a-card title="栏目列表">
+        <div slot="extra">
+          <slot name="action" :selecteds="selecteds"></slot>
         </div>
-        <a-divider />
         <a-tree :tree-data="treeData" :showLine="true" @select="handleSelect" />
       </a-card>
     </a-col>
     <a-col :span="18">
-      <a-card  v-if="selecteds.length==0">
-          <a-alert message="请选择节点" type="info" />
+      <a-card v-if="selecteds.length==0">
+        <a-alert message="请选择节点" type="info" />
       </a-card>
-      
-      <a-card v-for="(item,index) in selecteds" :key="index" :title="item.title">
-        <slot :model="item"></slot>
-      </a-card>
+
+      <slot name="content" :selecteds="selecteds">
+        <a-card v-for="(item,index) in selecteds" :key="index" :title="item.title">
+          <slot :model="item"></slot>
+        </a-card>
+      </slot>
     </a-col>
   </a-row>
 </template>
@@ -39,9 +39,7 @@ export default {
   mounted() {
     this.init();
   },
-  computed: {
-   
-  },
+  computed: {},
   methods: {
     init() {
       this.service.tree().then(response => {
@@ -67,6 +65,11 @@ export default {
       let records = childMap({ children: this.treeData });
       records = records.filter(item => keys.indexOf(item.key) >= 0);
       return records;
+    },
+    refresh() {
+      this.service.tree().then(response => {
+        this.treeData = response.data;
+      });
     }
   }
 };
