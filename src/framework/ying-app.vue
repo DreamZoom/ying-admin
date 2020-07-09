@@ -6,6 +6,10 @@ import Vuex from "vuex";
 import VueRouter from "vue-router";
 import app_store from "./store/app";
 import {message} from "ant-design-vue";
+
+import login_view from "./views/login";
+import change_password from "./views/changepassword";
+import layout_view from "./layout/main";
 export default {
   name: "YingApp",
   props: {
@@ -78,14 +82,14 @@ export default {
         const routes = [
           {
             path: "/login",
-            component: () => import("./views/login")
+            component: login_view
           },
           {
             path: "/",
-            component: () => import("./layout/main"),
+            component: layout_view,
             children: [{
               path:"/changepassword",
-              component:()=>import("./views/changepassword")
+              component:change_password
             }].concat(childs) 
           }
         ];

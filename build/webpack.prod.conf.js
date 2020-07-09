@@ -14,7 +14,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const env = require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
-  entry: './src/components/index.js',
+  entry: './src/framework/index.js',
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -26,7 +26,6 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('[name].js'),
-    chunkFilename: utils.assetsPath('[id].js'),
     libraryTarget: "umd",
     // 　libraryTarget：为了支持多种使用场景，我们需要选择合适的打包格式。libraryTarget 属性。这是可以控制 library 如何以不同方式暴露的选项。
     umdNamedDefine: true
@@ -76,8 +75,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
     // split vendor js into its own file
-
-    
 
 
   ]
