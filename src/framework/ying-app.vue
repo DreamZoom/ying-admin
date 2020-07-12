@@ -104,7 +104,12 @@ export default {
             logo: config.logo
           },
           getters: {
-            ...getters
+            ...getters,
+            services(state){
+                return {
+                  ...config.services
+                }
+            }
           },
           mutations: {
             ...mutations

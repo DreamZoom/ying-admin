@@ -12,7 +12,7 @@ export default {
             icon: "home",
             component: home,
             meta:{
-                // authority: ['admin'],
+                authority: ['admin'],
             }
             
         },
@@ -28,5 +28,16 @@ export default {
                 component: channelEdit,
             }]
         }
-    ]
+    ],
+    services:{
+        login(){
+
+        },
+        changepassword(){
+
+        },
+        getUser(){
+
+        }
+    }
 }
