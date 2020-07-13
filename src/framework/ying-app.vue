@@ -4,8 +4,8 @@
 <script>
 import Vuex from "vuex";
 import VueRouter from "vue-router";
-import app_store from "./store/app";
 import {message} from "ant-design-vue";
+import makestore from "./store/makestore"
 
 import login_view from "./views/login";
 import change_password from "./views/changepassword";
@@ -41,6 +41,7 @@ export default {
             });
           } else {
             //求两个权限的交集
+            console.log(store.getters.authority);
             let intersection = store.getters.authority.filter(function(val) {
               return to.meta.authority.indexOf(val) > -1;
             });
@@ -95,32 +96,12 @@ export default {
         ];
         this.routes = routes;
         const menus = this.buildMenus(childs);
-        const { state, getters, mutations, actions, modules } = app_store;
-        this.stores = {
-          state: {
-            ...state,
+        this.stores = makestore({
             menus,
             title: config.title,
             logo: config.logo
-          },
-          getters: {
-            ...getters,
-            services(state){
-                return {
-                  ...config.services
-                }
-            }
-          },
-          mutations: {
-            ...mutations
-          },
-          actions: {
-            ...actions
-          },
-          modules: {
-            ...modules
-          }
-        };
+        },config.sysservices);
+        
       });
     },
     buildMenus(routes) {

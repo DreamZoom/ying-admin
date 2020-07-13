@@ -29,15 +29,7 @@ export default {
             }]
         }
     ],
-    services:{
-        login(){
+    sysservices:{
 
-        },
-        changepassword(){
-
-        },
-        getUser(){
-
-        }
     }
 }

@@ -68,6 +68,9 @@ export default {
             if (state.user && state.user.authority instanceof Array) {
                 return state.user.authority;
             }
+            if (state.user && state.user.roles && typeof state.user.roles ==="string") {
+                return state.user.roles.split(",");
+            }
             return [];
         },
         messages(state){
@@ -117,46 +120,6 @@ export default {
         }
     },
     actions: {
-        async getUserInfo(context, token) {
-            return request.post('api/oauth/user').then((response) => {
-                context.commit('setUserInfo', response.data);
-                return Promise.resolve(response.data);
-            });
-        },
-        async login(context, user) {
-            const { username, password } = user;
-            return request
-                .post('api/oauth/token', {
-                    client_id: "manager",
-                    client_secret: "123456",
-                    grant_type: 'password',
-                    username: username,
-                    password: password
-                })
-                .then((response) => {
-                    const token = response.data;
-                    console.log(token);
-                    if (token.access_token) {
-                        context.commit('setToken', token);
-                        return context.dispatch('getUserInfo', token.access_token);
-                    }
-                    else {
-                        return Promise.reject(token);
-                    }
-                });
-        },
-        async changepassword(context, user) {
-            const { username, password, newpassword } = user;
-            return request
-                .post('api/user/account/change-password', {
-                    username,
-                    password: password,
-                    new_password: newpassword
-                });
-        },
-        async logout(context) {
-            context.commit('logout');
-            return Promise.resolve({ result: true });
-        }
+        
     }
 }

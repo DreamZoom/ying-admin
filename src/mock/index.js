@@ -13,7 +13,7 @@ Mock.mock("/api/oauth/user", "post", (req, res) => {
         password: "$2a$10$6/2ruM.9nwt70KRnlj2VReLND5Ve4EjQVrDpnFIsMH3JgYlsuQRSy",
         createTime: "2020-04-24 22:30:01",
         tell: null,
-        roles: null,
+        roles: "admin",
         nickname: "管理员2",
         alias: null,
         updateTime: "2020-04-24 22:30:01",

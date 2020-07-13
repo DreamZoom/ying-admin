@@ -11,19 +11,21 @@ import YingTable from "./components/table";
 import YingSearchForm from "./components/search-form";
 import YingSearchFormItem from "./components/search-form-item";
 import YingTree from "./components/tree";
+import YingPage from "./components/page";
 
 import BaseService from "./service/service";
 import ActionModal from "./utils/modal";
+import SysServices from "./service/sysservice";
 const components = {
     YingApp,
     PageWapper,
     YingTable,
     YingSearchForm,
     YingSearchFormItem,
-    YingTree
+    YingTree,
+    YingPage
 };
 
-console.log(components)
 
 const install = function (Vue, opts = { size: "large" }) {
     Vue.use(VueRouter);
@@ -46,5 +48,6 @@ export default {
     version: '0.0.0.1',
     install,
     BaseService,
-    ActionModal
+    ActionModal,
+    SysServices
 };
