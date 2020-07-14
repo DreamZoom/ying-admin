@@ -2,10 +2,7 @@ import app_store from "../store/app";
 import SysServices from "../service/sysservice";
 export default function (newstate,services) {
     let sysservice = new SysServices();
-    sysservice= {
-        ...sysservice,
-        ...services
-    }
+    sysservice = Object.assign(sysservice,services);
     const { state, getters, mutations, actions, modules } = app_store;
     return {
         state: {
