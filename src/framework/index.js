@@ -13,6 +13,8 @@ import YingSearchFormItem from "./components/search-form-item";
 import YingTree from "./components/tree";
 import YingPage from "./components/page";
 
+
+import request from "./utils/request";
 import BaseService from "./service/service";
 import ActionModal from "./utils/modal";
 import SysServices from "./service/sysservice";
@@ -47,6 +49,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 export default {
     version: '0.0.0.1',
     install,
+    request,
     BaseService,
     ActionModal,
     SysServices
