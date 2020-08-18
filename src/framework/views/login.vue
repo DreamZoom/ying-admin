@@ -2,8 +2,8 @@
   <div class="ying-login-box">
     <div class="ying-login-header">
       <h3>
-        <img :src="$store.state.logo" alt />
-        {{$store.state.title}}
+        <img :src="$app.getLogo()" alt />
+        {{$app.getTitle()}}
       </h3>
     </div>
     <a-form :form="form" class="login-form" @submit="handleSubmit">
@@ -46,10 +46,10 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log("Received values of form: ", values);
-          this.$store.dispatch("login", { ...values }).then(data => {
-            this.$router.push({ path: "/" });
-            console.log(data);
-          });
+          // this.$store.dispatch("login", { ...values }).then(data => {
+          //   this.$router.push({ path: "/" });
+          //   console.log(data);
+          // });
         }
       });
     }

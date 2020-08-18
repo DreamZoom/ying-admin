@@ -6,15 +6,15 @@
       v-model="collapsed"
       :trigger="null"
       collapsible
-      :theme="$store.getters.theme"
+      :theme="$app.getTheme()"
     >
-      <div class="ying-app-logo" :class="$store.getters.theme">
+      <div class="ying-app-logo" :class="$app.getTheme()">
         <a>
-          <img :src="$store.state.logo" alt="logo" />
-          <h1 v-if="!collapsed">{{$store.state.title}}</h1>
+          <img :src="$app.getLogo()" alt="logo" />
+          <h1 v-if="!collapsed">{{$app.getTitle()}}</h1>
         </a>
       </div>
-      <component :is="$store.getters.menus"></component>
+      <component :is="$app.getMenus()"></component>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
@@ -31,7 +31,7 @@
                 </div>
                 <div slot="overlay"  >
                   <a-card class="ying-message-list" @click="e => e.stopPropagation()">
-                    <a-list item-layout="horizontal" :data-source="$store.getters.messages">
+                    <!-- <a-list item-layout="horizontal" :data-source="$store.getters.messages">
                       <a-list-item class="ying-message-item" slot="renderItem" slot-scope="item">
                         <a-list-item-meta :description="item.content">
                           <a slot="title">{{ item.title }}</a>
@@ -39,12 +39,12 @@
                         <a slot="actions" @click="showMessage(item)">详情</a>
                         <a slot="actions" @click="removeMessage(item)">删除</a>
                       </a-list-item>
-                    </a-list>
+                    </a-list> -->
                   </a-card>
                 </div>
               </a-dropdown>
             </div>
-            <div class="ying-app-header-right-action" v-if="$store.getters.login">
+            <!-- <div class="ying-app-header-right-action" v-if="$store.getters.login">
               <a-dropdown>
                 <div>
                   <a-icon type="user" />
@@ -60,7 +60,7 @@
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
-            </div>
+            </div> -->
             <div class="ying-app-header-right-action">
               <a-dropdown>
                 <a class="ant-dropdown-link">
@@ -68,10 +68,10 @@
                 </a>
                 <a-menu slot="overlay">
                   <a-menu-item>
-                    <a @click="setTheme('dark')">黑色经典</a>
+                    <a @click="$app.setTheme('dark')">黑色经典</a>
                   </a-menu-item>
                   <a-menu-item>
-                    <a @click="setTheme('light')">白色通用</a>
+                    <a @click="$app.setTheme('light')">白色通用</a>
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>

@@ -13,11 +13,13 @@ import YingSearchFormItem from "./components/search-form-item";
 import YingTree from "./components/tree";
 import YingPage from "./components/page";
 
-
+import app from "./app";
 import request from "./utils/request";
 import BaseService from "./service/service";
 import ActionModal from "./utils/modal";
 import SysServices from "./service/sysservice";
+
+
 const components = {
     YingApp,
     PageWapper,
@@ -33,6 +35,8 @@ const install = function (Vue, opts = { size: "large" }) {
     Vue.use(VueRouter);
     Vue.use(Vuex);
     Vue.use(antd, opts);
+
+    Vue.prototype.$app = app;//注入app服务
 
     Object.keys(components).forEach((key) => {
         const component = components[key];
