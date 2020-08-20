@@ -64,6 +64,7 @@
 </template>
 <script>
 export default {
+  name:"YingLayout",
   data() {
     return {
       collapsed: false,

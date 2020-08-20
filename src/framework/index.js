@@ -20,6 +20,9 @@ import ActionModal from "./utils/modal";
 import SysServices from "./service/sysservice";
 
 
+import YingLayout from "./layout/main";
+
+
 const components = {
     YingApp,
     PageWapper,
@@ -27,7 +30,8 @@ const components = {
     YingSearchForm,
     YingSearchFormItem,
     YingTree,
-    YingPage
+    YingPage,
+    YingLayout
 };
 
 
@@ -56,5 +60,6 @@ export default {
     request,
     BaseService,
     ActionModal,
-    SysServices
+    SysServices,
+    ...components
 };
