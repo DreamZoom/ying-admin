@@ -13,7 +13,7 @@ import YingSearchFormItem from "./components/search-form-item";
 import YingTree from "./components/tree";
 import YingPage from "./components/page";
 
-import app from "./app";
+import app from "./store/index";
 import request from "./utils/request";
 import BaseService from "./service/service";
 import ActionModal from "./utils/modal";
@@ -33,7 +33,7 @@ const components = {
 
 const install = function (Vue, opts = { size: "large" }) {
     Vue.use(VueRouter);
-    Vue.use(Vuex);
+   
     Vue.use(antd, opts);
 
     Vue.prototype.$app = app;//注入app服务

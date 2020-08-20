@@ -6,15 +6,15 @@
       v-model="collapsed"
       :trigger="null"
       collapsible
-      :theme="$app.getTheme()"
+      :theme="$app.getters.theme"
     >
-      <div class="ying-app-logo" :class="$app.getTheme()">
+      <div class="ying-app-logo" :class="$app.getters.theme">
         <a>
-          <img :src="$app.getLogo()" alt="logo" />
-          <h1 v-if="!collapsed">{{$app.getTitle()}}</h1>
+          <img :src="$app.getters.logo" alt="logo" />
+          <h1 v-if="!collapsed">{{$app.getters.title}}</h1>
         </a>
       </div>
-      <component :is="$app.getMenus()"></component>
+      <component :is="$app.getters.menus"></component>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
@@ -22,56 +22,31 @@
           <span class="ying-app-trigger" @click="collapsed = !collapsed">
             <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
           </span>
+          <div class="ying-app-header-left">
+            <slot name="header-left"></slot>
+          </div>
           <div class="ying-app-header-right">
-            <div class="ying-app-header-right-action">
-              <a-dropdown :trigger="['click']" >
-                <div>
-                  <a-icon type="mail" />
-                  <span>消息</span>
-                </div>
-                <div slot="overlay"  >
-                  <a-card class="ying-message-list" @click="e => e.stopPropagation()">
-                    <!-- <a-list item-layout="horizontal" :data-source="$store.getters.messages">
-                      <a-list-item class="ying-message-item" slot="renderItem" slot-scope="item">
-                        <a-list-item-meta :description="item.content">
-                          <a slot="title">{{ item.title }}</a>
-                        </a-list-item-meta>
-                        <a slot="actions" @click="showMessage(item)">详情</a>
-                        <a slot="actions" @click="removeMessage(item)">删除</a>
-                      </a-list-item>
-                    </a-list> -->
-                  </a-card>
-                </div>
-              </a-dropdown>
-            </div>
-            <!-- <div class="ying-app-header-right-action" v-if="$store.getters.login">
-              <a-dropdown>
+            <slot name="header-right"></slot>
+            <slot name="header-user">
+              <div class="ying-app-header-action" v-if="$store.getters.authorized">
                 <div>
                   <a-icon type="user" />
-                  <span>{{$store.state.user.username}}</span>
+                  <span>{{$store.getters.user.username}}</span>
                 </div>
-                <a-menu slot="overlay">
-                  <a-menu-item>
-                    <router-link :to="{path:'/changepassword'}">修改密码</router-link>
-                  </a-menu-item>
-                  <a-menu-divider />
-                  <a-menu-item>
-                    <a @click="logout">退出</a>
-                  </a-menu-item>
-                </a-menu>
-              </a-dropdown>
-            </div> -->
-            <div class="ying-app-header-right-action">
-              <a-dropdown>
+              </div>
+            </slot>
+
+            <div class="ying-app-header-action">
+              <a-dropdown :trigger="['click']">
                 <a class="ant-dropdown-link">
                   <a-icon type="dashboard" />
                 </a>
                 <a-menu slot="overlay">
                   <a-menu-item>
-                    <a @click="$app.setTheme('dark')">黑色经典</a>
+                    <a @click="$app.commit('setTheme','dark')">黑色经典</a>
                   </a-menu-item>
                   <a-menu-item>
-                    <a @click="$app.setTheme('light')">白色通用</a>
+                    <a @click="$app.commit('setTheme','light')">白色通用</a>
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
@@ -80,7 +55,9 @@
         </div>
       </a-layout-header>
       <a-layout-content>
-        <router-view></router-view>
+        <slot>
+          <router-view></router-view>
+        </slot>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -90,40 +67,9 @@ export default {
   data() {
     return {
       collapsed: false,
-      dataSource: ["Burns Bay Road", "Downing Street", "Wall Street"],
-      data: [
-        {
-          title: "Ant Design Title 1"
-        },
-        {
-          title: "Ant Design Title 2"
-        },
-        {
-          title: "Ant Design Title 3"
-        },
-        {
-          title: "Ant Design Title 4"
-        }
-      ]
     };
   },
-  methods: {
-    logout() {
-      this.$store.dispatch("logout").then(() => {
-        this.$router.push({ path: "/login" });
-      });
-    },
-    setTheme(theme) {
-      this.$store.commit("setTheme", theme);
-    },
-    showMessage(message) {
-      const { title, content } = message;
-      this.$info({ title,content});
-    },
-    removeMessage(message){
-      this.$store.commit("removeMessage", message);
-    }
-  }
+  methods: {},
 };
 </script>
 <style>
@@ -197,16 +143,13 @@ export default {
   margin-left: auto;
   overflow: hidden;
 }
-.ying-app-header-right-action {
-  display: flex;
-  align-items: center;
-  height: 100%;
+.ying-app-header-action {
   padding: 0 12px;
   cursor: pointer;
   transition: all 0.3s;
   font-size: 16px;
 }
-.ying-app-header-right-action:hover {
+.ying-app-header-action:hover {
   background-color: #efefef;
 }
 .ying-message-list {

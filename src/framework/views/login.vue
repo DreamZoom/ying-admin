@@ -2,8 +2,8 @@
   <div class="ying-login-box">
     <div class="ying-login-header">
       <h3>
-        <img :src="$app.getLogo()" alt />
-        {{$app.getTitle()}}
+        <img :src="$app.getters.logo" alt />
+        {{$app.getters.title}}
       </h3>
     </div>
     <a-form :form="form" class="login-form" @submit="handleSubmit">
@@ -37,7 +37,7 @@
 export default {
   data() {
     return {
-      form: this.$form.createForm(this, { name: "coordinated" })
+      form: this.$form.createForm(this, { name: "coordinated" }),
     };
   },
   methods: {
@@ -52,8 +52,8 @@ export default {
           // });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

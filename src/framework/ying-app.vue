@@ -1,11 +1,10 @@
 <template>
-  <component :is="layout"></component>
+  <component :is="app"></component>
 </template>
 <script>
 import Vuex from "vuex";
 import VueRouter from "vue-router";
 import { message } from "ant-design-vue";
-import makestore from "./store/makestore";
 
 import login_view from "./views/login";
 import change_password from "./views/changepassword";
@@ -69,15 +68,9 @@ export default {
         this.routes = routes;
         router.addRoutes(this.routes);
         const menus = this.buildMenus(childs);
-        // this.stores = makestore(
-        //   {
-        //     menus,
-        //     title: config.title,
-        //     logo: config.logo,
-        //   },
-        //   config.sysservices
-        // );
-        this.$app.setConfig({ ...config, menus });
+        
+        this.$app.commit("setConfig", { ...config, menus });
+        this.$app.commit("setMenus", menus);
       });
     },
     buildMenus(routes) {

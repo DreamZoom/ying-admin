@@ -20,13 +20,13 @@ router.beforeEach((to, from, next) => {
     ) {
         console.log(to.meta.authority);
         //判断是否登录
-        if (!app.isLogin()) {
+        if (!app.getters.authorized) {
             next({
                 path: "/login"
             });
         } else {
             //判断是否有权限
-            if (app.haveAuthority(to.meta.authority)) {
+            if (app.getters.accessVoter.apply(app, [to.meta.authority])) {
                 message.warning(`对不起，您没有权限访问 ${to.name}。`)
                 next(false);
             } else {
