@@ -2,15 +2,30 @@
   <component :is="app"></component>
 </template>
 <script>
-import Vuex from "vuex";
-import VueRouter from "vue-router";
-import { message } from "ant-design-vue";
-
-import login_view from "./views/login";
-import change_password from "./views/changepassword";
-import layout_view from "./layout/main";
-
 import router from "./router/index";
+
+function build_menus(parent, parentPath) {
+  var menus = [];
+
+  if (!(parent.children && parent.children instanceof Array)) return menus;
+
+  parent.children.map((item) => {
+    let { path, name, icon, children } = item;
+    if (name) {
+      const arrPath = parentPath.concat([path]);
+      const childs = build_menus(item, arrPath);
+      path = arrPath.join("/").replace("//", "/");
+      menus.push({
+        path,
+        name,
+        icon,
+        childs,
+      });
+    }
+  });
+  return menus;
+}
+
 export default {
   name: "YingApp",
   router,
@@ -21,20 +36,8 @@ export default {
     },
   },
   computed: {
-    layout() {
-      console.log(this.$route);
-      const meta = this.$route.meta || {};
-      const me_layout_view = meta.layout || layout_view;
-      return me_layout_view;
-    },
     app() {
-      const store = new Vuex.Store({ ...this.stores });
-      // const router = new VueRouter({
-      //   routes: this.routes
-      // });
-
       return {
-        store,
         template: "<router-view></router-view>",
       };
     },
@@ -52,56 +55,14 @@ export default {
     init() {
       //get routes and build menus
       this.config().then((config) => {
-        const childs = config.routes || [];
-        const routes = [
-          {
-            path: "/",
-            component: layout_view,
-            children: [
-              {
-                path: "/changepassword",
-                component: change_password,
-              },
-            ].concat(childs),
-          },
-        ];
-        this.routes = routes;
-        router.addRoutes(this.routes);
-        const menus = this.buildMenus(childs);
-        
+        const routes = config.routes || [];
+        router.addRoutes(routes);
+        const menus = routes
+          .map((item) => build_menus(item, [item.path]))
+          .reduce((a, b) => a.concat(b));
         this.$app.commit("setConfig", { ...config, menus });
         this.$app.commit("setMenus", menus);
       });
-    },
-    buildMenus(routes) {
-      function make(routes, parent) {
-        var menus = [];
-        routes.map((item) => {
-          let { path, name, icon, children } = item;
-          if (name) {
-            var childs = [];
-            if (children && children instanceof Array) {
-              childs = make(children, item);
-            }
-            const index = path.substr(0, 1);
-            if (index != "/") {
-              path = "/" + path;
-              if (parent && parent.path) {
-                path = parent.path + path;
-              }
-            }
-            menus.push({
-              path,
-              name,
-              icon,
-              childs,
-            });
-          }
-        });
-        return menus;
-      }
-
-      return make(routes, { path: "/" });
     },
   },
 };

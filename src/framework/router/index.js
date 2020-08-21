@@ -1,12 +1,7 @@
 import VueRouter from "vue-router";
 import login from "../views/login";
 const router = new VueRouter({
-    routes: [
-        {
-            path: "/login",
-            component: login
-        },
-    ]
+    routes: []
 });
 
 router.beforeEach((to, from, next) => {

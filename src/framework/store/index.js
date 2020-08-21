@@ -16,6 +16,9 @@ function make_menus(menus) {
     }).join("");
 }
 
+
+
+
 const store = new Vuex.Store({
     state: {
         theme: "dark",

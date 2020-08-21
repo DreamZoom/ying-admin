@@ -17,7 +17,7 @@
       <component :is="$app.getters.menus"></component>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
+      <a-layout-header style="background: #fff; padding: 0px">
         <div class="ying-app-header">
           <span class="ying-app-trigger" @click="collapsed = !collapsed">
             <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
@@ -28,10 +28,10 @@
           <div class="ying-app-header-right">
             <slot name="header-right"></slot>
             <slot name="header-user">
-              <div class="ying-app-header-action" v-if="$store.getters.authorized">
+              <div class="ying-app-header-action" v-if="$app.getters.authorized">
                 <div>
                   <a-icon type="user" />
-                  <span>{{$store.getters.user.username}}</span>
+                  <span>{{$app.getters.user.username}}</span>
                 </div>
               </div>
             </slot>
@@ -56,7 +56,9 @@
       </a-layout-header>
       <a-layout-content>
         <slot>
-          <router-view></router-view>
+          <transition>
+            <router-view></router-view>
+          </transition>
         </slot>
       </a-layout-content>
     </a-layout>
@@ -64,7 +66,7 @@
 </template>
 <script>
 export default {
-  name:"YingLayout",
+  name: "YingLayout",
   data() {
     return {
       collapsed: false,
