@@ -9,7 +9,7 @@
     <a-form :form="form" class="login-form" @submit="handleSubmit">
       <a-form-item>
         <a-input
-          placeholder="Username"
+          placeholder="用户名"
           v-decorator="['username', { rules: [{ required: true, message: '请输入账户!' }] }]"
         >
           <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
@@ -18,15 +18,14 @@
       <a-form-item>
         <a-input
           type="password"
-          placeholder="Password"
+          placeholder="密 码"
           v-decorator="['password', { rules: [{ required: true, message: '请输入密码!' }] }]"
         >
           <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
         </a-input>
       </a-form-item>
       <a-form-item>
-        <a-checkbox v-decorator="['remember']" checked>记住密码</a-checkbox>
-        <a class="login-form-forgot">忘记密码</a>
+        
         <a-button type="primary" html-type="submit" block>登录</a-button>
       </a-form-item>
     </a-form>
@@ -35,9 +34,17 @@
 
 <script>
 export default {
+  props:{
+      handleLogin:{
+        type:Function,
+        default:()=>{
+
+        }
+      }
+  },
   data() {
     return {
-      form: this.$form.createForm(this, { name: "coordinated" }),
+      form: this.$form.createForm(this, { name: "login" }),
     };
   },
   methods: {
@@ -46,10 +53,9 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log("Received values of form: ", values);
-          // this.$store.dispatch("login", { ...values }).then(data => {
-          //   this.$router.push({ path: "/" });
-          //   console.log(data);
-          // });
+          this.handleLogin().then(()=>{
+            
+          })
         }
       });
     },
@@ -58,12 +64,13 @@ export default {
 </script>
 <style scoped>
 .ying-login-box {
-  margin: 60px auto;
+  margin: auto;
+  padding: 60px auto;
   width: 300px;
 }
 .ying-login-header {
   text-align: center;
-  margin: 40px;
+  padding: 40px;
 }
 .login-form-forgot {
   float: right;

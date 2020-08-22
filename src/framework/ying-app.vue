@@ -6,9 +6,7 @@ import router from "./router/index";
 
 function build_menus(parent, parentPath) {
   var menus = [];
-
   if (!(parent.children && parent.children instanceof Array)) return menus;
-
   parent.children.map((item) => {
     let { path, name, icon, children } = item;
     if (name) {

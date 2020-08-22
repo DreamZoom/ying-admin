@@ -6,15 +6,15 @@ import login_view from "./framework/views/login";
 
 import YingAdmin from "./framework/index"
 
-const { YingLayout } = YingAdmin;
+
 export default {
     title: "Ying Admin",
     logo: logo,
-    layout: "",
+    login: "/login",
     routes: [
         {
             path: "/",
-            component: YingLayout,
+            component: YingAdmin.YingLayout,
             children: [
                 {
                     path: "",
@@ -22,7 +22,7 @@ export default {
                     icon: "home",
                     component: home,
                     meta: {
-                        // authority: ['admin'],
+                        authority: ['admin'],
                     }
 
                 },

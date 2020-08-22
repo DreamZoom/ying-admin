@@ -1,5 +1,4 @@
 import VueRouter from "vue-router";
-import login from "../views/login";
 const router = new VueRouter({
     routes: []
 });
@@ -17,7 +16,7 @@ router.beforeEach((to, from, next) => {
         //判断是否登录
         if (!app.getters.authorized) {
             next({
-                path: "/login"
+                path: app.getters.login
             });
         } else {
             //判断是否有权限

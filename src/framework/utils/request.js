@@ -38,7 +38,6 @@ request.interceptors.request.use(function (config) {
 request.interceptors.response.use(function (response) {
     return Promise.resolve(response);
 }, function (error) {
-    console.log(error);
     const { response } = error;
     if (response && response.status) {
         const { data } = response;
@@ -47,7 +46,6 @@ request.interceptors.response.use(function (response) {
             message: `请求错误 ${response.status}:`,
             description: `${errorText}`,
         });
-        console.warn(data)
     } else if (!response) {
         notification.error({
             description: '您的网络发生异常，无法连接服务器',

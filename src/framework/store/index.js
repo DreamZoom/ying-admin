@@ -26,7 +26,8 @@ const store = new Vuex.Store({
         logo: default_logo,
         menus: [],
         user: {},
-        token: {}
+        token: {},
+        login: "/login"
     },
     getters: {
         theme(state) {
@@ -37,6 +38,9 @@ const store = new Vuex.Store({
         },
         logo(state) {
             return state.logo || default_logo;
+        },
+        login(state) {
+            return state.login;
         },
         authorized(state) {
             return state.user && state.user.username;
@@ -108,10 +112,11 @@ const store = new Vuex.Store({
             window.localStorage.setItem("token", JSON.stringify(token));
         },
         setConfig(state, config) {
-            const { logo, title, theme } = config;
+            const { logo, title, theme, login } = config;
             state.title = title || state.title;
             state.logo = logo || state.logo;
             state.theme = theme || state.theme;
+            state.login = login || state.login;
         }
     },
 });
