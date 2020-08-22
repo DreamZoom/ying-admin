@@ -16,7 +16,18 @@ function make_menus(menus) {
     }).join("");
 }
 
+const userstring = localStorage.getItem("user");
+const tokenstring = localStorage.getItem("token");
 
+let user = {};
+if (userstring) {
+    user = JSON.parse(userstring);
+}
+
+let token = {};
+if (tokenstring) {
+    token = JSON.parse(tokenstring);
+}
 
 
 const store = new Vuex.Store({
@@ -25,9 +36,13 @@ const store = new Vuex.Store({
         title: "通用管理中控台",
         logo: default_logo,
         menus: [],
-        user: {},
-        token: {},
-        login: "/login"
+        user: { ...user },
+        token: { ...token },
+        login: "/login",
+        client: {
+            client_id: "app_123456",
+            client_secret: "client_secret"
+        }
     },
     getters: {
         theme(state) {
@@ -42,19 +57,31 @@ const store = new Vuex.Store({
         login(state) {
             return state.login;
         },
+        client(state) {
+            return state.client;
+        },
+        user(state) {
+            return state.user || {};
+        },
+        token(state) {
+            return state.token || {};
+        },
         authorized(state) {
             return state.user && state.user.username;
         },
         authorities(state) {
-            if (this.getters.authorized) {
+            if (store.getters.authorized) {
+                if (state.user.roles && typeof state.user.roles == "string" && state.user.roles != "") {
+                    return state.user.roles.split(",")
+                }
                 return state.user.authorities || []
             }
             return [];
         },
         accessVoter(state) {
-            return (access) => {
+            return function (access) {
                 access = access || [];
-                let intersection = this.getters.authorities.filter(function (val) {
+                let intersection = store.getters.authorities.filter(function (val) {
                     return access.indexOf(val) > -1;
                 });
                 return intersection.length > 0;
@@ -112,13 +139,19 @@ const store = new Vuex.Store({
             window.localStorage.setItem("token", JSON.stringify(token));
         },
         setConfig(state, config) {
-            const { logo, title, theme, login } = config;
+            const { logo, title, theme, login, client } = config;
             state.title = title || state.title;
             state.logo = logo || state.logo;
             state.theme = theme || state.theme;
             state.login = login || state.login;
+            state.client = client || state.client;
         }
     },
+    actions: {
+        request(context) {
+
+        }
+    }
 });
 
 

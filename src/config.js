@@ -11,6 +11,10 @@ export default {
     title: "Ying Admin",
     logo: logo,
     login: "/login",
+    client: {
+        client_id: "app_123456",
+        client_secret: "client_secret"
+    },
     routes: [
         {
             path: "/",
@@ -42,7 +46,7 @@ export default {
         },
         {
             path: "/login",
-            component:login_view
+            component: login_view
         }
     ]
 }

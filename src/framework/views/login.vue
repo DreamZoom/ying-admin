@@ -25,7 +25,6 @@
         </a-input>
       </a-form-item>
       <a-form-item>
-        
         <a-button type="primary" html-type="submit" block>登录</a-button>
       </a-form-item>
     </a-form>
@@ -33,14 +32,33 @@
 </template>
 
 <script>
+import request from "../utils/request";
 export default {
-  props:{
-      handleLogin:{
-        type:Function,
-        default:()=>{
-
-        }
-      }
+  props: {
+    handleLogin: {
+      type: Function,
+      default: function (user) {
+        console.log(this.$app);
+        const { client_id, client_secret } = this.$app.getters.client;
+        return request
+          .post("/api/oauth/token", {
+            grant_type: "password",
+            client_id,
+            client_secret,
+            ...user,
+          })
+          .then((response) => {
+            const token = response.data;
+            return request.post("/api/oauth/user").then((response) => {
+              const user = response.data;
+              return Promise.resolve({
+                token,
+                user,
+              });
+            });
+          });
+      },
+    },
   },
   data() {
     return {
@@ -53,9 +71,11 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log("Received values of form: ", values);
-          this.handleLogin().then(()=>{
-            
-          })
+          this.handleLogin({ ...values }).then((response) => {
+            this.$app.commit("setUser", { ...response.user });
+            this.$app.commit("setToken", { ...response.token });
+            this.$router.push("/");
+          });
         }
       });
     },

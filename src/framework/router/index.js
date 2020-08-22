@@ -1,4 +1,5 @@
 import VueRouter from "vue-router";
+import {message} from "ant-design-vue";
 const router = new VueRouter({
     routes: []
 });
@@ -20,7 +21,7 @@ router.beforeEach((to, from, next) => {
             });
         } else {
             //判断是否有权限
-            if (app.getters.accessVoter.apply(app, [to.meta.authority])) {
+            if (!app.getters.accessVoter.apply(app, [to.meta.authority])) {
                 message.warning(`对不起，您没有权限访问 ${to.name}。`)
                 next(false);
             } else {
