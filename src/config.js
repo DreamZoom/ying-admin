@@ -2,7 +2,6 @@ import home from "./views/home"
 import channel from "./views/channel"
 import channelEdit from "./views/channel-edit"
 import logo from "./assets/logo.png"
-import login_view from "./framework/views/login";
 
 import YingAdmin from "./framework/index"
 
@@ -46,7 +45,7 @@ export default {
         },
         {
             path: "/login",
-            component: login_view
+            component: YingAdmin.YingLogin
         }
     ]
 }

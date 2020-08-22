@@ -22,6 +22,8 @@ import SysServices from "./service/sysservice";
 
 import YingLayout from "./layout/main";
 
+import YingLogin from "./views/login";
+
 
 const components = {
     YingApp,
@@ -31,7 +33,8 @@ const components = {
     YingSearchFormItem,
     YingTree,
     YingPage,
-    YingLayout
+    YingLayout,
+    YingLogin
 };
 
 
