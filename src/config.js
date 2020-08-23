@@ -2,6 +2,7 @@ import home from "./views/home"
 import channel from "./views/channel"
 import channelEdit from "./views/channel-edit"
 import logo from "./assets/logo.png"
+import posts from "./views/posts"
 
 import YingAdmin from "./framework/index"
 
@@ -40,6 +41,13 @@ export default {
                         icon: "bell",
                         component: channelEdit,
                     }]
+                },
+                ,
+                {
+                    path: "posts",
+                    name: "文章管理",
+                    icon: "bell",
+                    component: posts
                 }
             ]
         },

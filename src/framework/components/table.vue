@@ -24,7 +24,7 @@
         :pagination="pagination"
         :row-selection="rowSelection"
         :loading="loading"
-        :columns="columns"
+        :columns="def_columns"
         :data-source="list"
         @change="handleChange"
       >
@@ -40,24 +40,27 @@
 export default {
   name: "YingTable",
   props: {
-    service: {
-      type: Function,
-      default: function() {}
+    request: {
+      type: [String, Function],
     },
-    title: String
+    title: String,
+    columns: {
+      type: [Array, Function],
+      default: ()=>[],
+    },
   },
   data() {
     return {
-      columns: [],
+      def_columns: [],
       list: [],
       pagination: {
         current: 1,
-        pageSize: 20
+        pageSize: 20,
       },
       selected_rows: [],
       loading: false,
       filters: {},
-      sorter: {}
+      sorter: {},
     };
   },
   computed: {
@@ -73,23 +76,40 @@ export default {
             "selectedRows: ",
             selectedRows
           );
-        }
+        },
       };
-    }
+    },
   },
   mounted() {
-    console.log(this);
     this.init();
   },
   methods: {
     init() {
-      this.columns = this.service.apply(this).columns();
-      this.columns.push({
+      if (typeof this.columns === "function") {
+        this.columns.apply(this).then((columns) => this.initColumns(columns));
+      } else if (this.columns instanceof Array) {
+        this.initColumns(this.columns);
+      }
+    },
+    initColumns(columns) {
+      this.def_columns = columns;
+      this.def_columns.push({
         title: "操作",
         key: "action",
-        scopedSlots: { customRender: "actions" }
+        scopedSlots: { customRender: "actions" },
       });
       this.handleChange(this.pagination, {}, {});
+    },
+    handleRequest(data) {
+      return Promise.resolve().then(() => {
+        if (typeof this.request === "string") {
+          return this.$request.post(this.request, { ...data });
+        } else if (typeof this.request === "function") {
+          return this.request.apply(this, [{ ...data }]);
+        } else {
+          return Promise.reject({ message: "request param type error" });
+        }
+      });
     },
     handleChange(pagination, filters, sorter) {
       this.filters = filters;
@@ -99,31 +119,28 @@ export default {
       pager.current = pagination.current;
       this.pagination = pager;
       this.loading = true;
-      this.service
-        .apply(this)
-        .query({
-          size: pagination.pageSize,
-          page: pagination.current,
-          sortField: sorter.field,
-          sortOrder: sorter.order,
-          ...filters
-        })
-        .then(response => {
-          const { data } = response;
-          const pagination = { ...this.pagination };
-          pagination.total = data.records;
-          this.loading = false;
-          this.list = data.list;
-          this.pagination = pagination;
-        });
+      this.handleRequest({
+        size: pagination.pageSize,
+        page: pagination.current,
+        sortField: sorter.field,
+        sortOrder: sorter.order,
+        ...filters,
+      }).then((response) => {
+        const { data } = response;
+        const pagination = { ...this.pagination };
+        pagination.total = data.records;
+        this.loading = false;
+        this.list = data.list;
+        this.pagination = pagination;
+      });
     },
     handleSearch(model) {
       this.handleChange({ current: 1 }, { ...model }, this.sorter);
     },
     refresh() {
       this.handleChange(this.pagination, this.filters, this.sorter);
-    }
-  }
+    },
+  },
 };
 </script>
 
