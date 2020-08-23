@@ -12,12 +12,12 @@ import YingSearchForm from "./components/search-form";
 import YingSearchFormItem from "./components/search-form-item";
 import YingTree from "./components/tree";
 import YingPage from "./components/page";
+import YingAction from "./components/action";
 
 import app from "./store/index";
 import request from "./utils/request";
 import BaseService from "./service/service";
 import ActionModal from "./utils/modal";
-import SysServices from "./service/sysservice";
 
 
 import YingLayout from "./layout/main";
@@ -34,7 +34,8 @@ const components = {
     YingTree,
     YingPage,
     YingLayout,
-    YingLogin
+    YingLogin,
+    YingAction
 };
 
 
@@ -44,6 +45,7 @@ const install = function (Vue, opts = { size: "large" }) {
     Vue.use(antd, opts);
 
     Vue.prototype.$app = app;//注入app服务
+    Vue.prototype.$request = request;
 
     Object.keys(components).forEach((key) => {
         const component = components[key];
@@ -63,6 +65,5 @@ export default {
     request,
     BaseService,
     ActionModal,
-    SysServices,
     ...components
 };

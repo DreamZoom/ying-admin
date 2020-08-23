@@ -1,9 +1,11 @@
 <template>
-  <component :is="app"></component>
+  <a-config-provider :locale="locale">
+    <component :is="app"></component>
+  </a-config-provider>
 </template>
 <script>
 import router from "./router/index";
-
+import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
 function build_menus(parent, parentPath) {
   var menus = [];
   if (!(parent.children && parent.children instanceof Array)) return menus;
@@ -44,6 +46,7 @@ export default {
     return {
       routes: [],
       stores: {},
+      locale: zhCN,
     };
   },
   mounted() {
