@@ -43,7 +43,6 @@ export default class {
         if (params && params.page) {
             params.page = params.page - 1;
         }
-        console.log(params);
         const api = this.getBaseApi().query;
         return request.post(api, params);
     }
@@ -51,23 +50,5 @@ export default class {
     list(params) {
         const api = this.getBaseApi().list;
         return request.post(api, params);
-    }
-
-    tree(params) {
-        const { treeField = "parentId", key = "id", childField = "children", rootValue = 0,textField="name" } = params || {};
-        return this.list().then((response) => {
-            const list = response.data;
-            const treeMap = (list, parent) => {
-                const childs = list.filter(item => item[treeField] == parent);
-                childs.map((item) => {
-                    item.title=item[textField];
-                    item.key =item[key];
-                    item[childField] = treeMap(list, item[key]);
-                });
-                return childs;
-            }
-            response.data = treeMap(list, rootValue);
-            return Promise.resolve(response);
-        });
     }
 }

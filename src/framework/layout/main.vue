@@ -56,9 +56,7 @@
       </a-layout-header>
       <a-layout-content>
         <slot>
-          <transition>
-            <router-view></router-view>
-          </transition>
+          <router-view></router-view>
         </slot>
       </a-layout-content>
     </a-layout>

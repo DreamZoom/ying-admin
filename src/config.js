@@ -1,7 +1,7 @@
+import logo from "./assets/logo.png"
+
 import home from "./views/home"
 import channel from "./views/channel"
-import channelEdit from "./views/channel-edit"
-import logo from "./assets/logo.png"
 import posts from "./views/posts"
 
 import YingAdmin from "./framework/index"
@@ -34,13 +34,7 @@ export default {
                     path: "channel",
                     name: "栏目管理",
                     icon: "bell",
-                    component: channel,
-                    children: [{
-                        path: "edit",
-                        name: "栏目编辑",
-                        icon: "bell",
-                        component: channelEdit,
-                    }]
+                    component: channel
                 },
                 ,
                 {

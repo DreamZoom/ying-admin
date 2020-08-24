@@ -17,7 +17,6 @@ import YingAction from "./components/action";
 import app from "./store/index";
 import request from "./utils/request";
 import BaseService from "./service/service";
-import ActionModal from "./utils/modal";
 
 
 import YingLayout from "./layout/main";
@@ -64,6 +63,5 @@ export default {
     install,
     request,
     BaseService,
-    ActionModal,
     ...components
 };
