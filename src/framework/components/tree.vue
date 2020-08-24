@@ -1,23 +1,17 @@
 <template>
-  <a-row :gutter="16">
-    <a-col :span="6">
-      <a-card title="栏目列表">
-        <div slot="extra">
-          <slot name="action" :selecteds="selecteds"></slot>
+  <a-row :gutter="10">
+    <a-col :span="6">   
+      <a-card>
+        <div>
+           <slot name="action" :rows="selecteds"></slot>
         </div>
-        <a-tree :tree-data="treeData" :showLine="true" @select="handleSelect" />
+        <a-tree :tree-data="treeData" :showLine="showLine" @select="handleSelect" :multiple="multiple" />
       </a-card>
     </a-col>
     <a-col :span="18">
-      <a-card v-if="selecteds.length==0">
-        <a-alert message="请选择节点" type="info" />
+      <a-card >
+        <slot :rows="selecteds"></slot>
       </a-card>
-
-      <slot name="content" :selecteds="selecteds">
-        <a-card v-for="(item,index) in selecteds" :key="index" :title="item.title">
-          <slot :model="item"></slot>
-        </a-card>
-      </slot>
     </a-col>
   </a-row>
 </template>
@@ -25,15 +19,39 @@
 export default {
   name: "YingTree",
   props: {
-    service: {
-      type: Object,
-      required: true
-    }
+    request: {
+      type: [String, Function],
+    },
+    data: null,
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
+    showLine: {
+      type: Boolean,
+      default: true,
+    },
+    rowKey: {
+      type: String,
+      default: "id",
+    },
+    parentKey: {
+      type: String,
+      default: "parentId",
+    },
+    rootValue: {
+      type: null,
+      default: 0,
+    },
+    labelKey: {
+      type: String,
+      default: "name",
+    },
   },
   data() {
     return {
       treeData: [],
-      selecteds: []
+      selecteds: [],
     };
   },
   mounted() {
@@ -42,35 +60,44 @@ export default {
   computed: {},
   methods: {
     init() {
-      this.service.tree().then(response => {
-        this.treeData = response.data;
+      this.handleRequest(this.data).then((response) => {
+        this.treeData = this.tree(response.data);
       });
+    },
+    tree(list) {
+      const treeMap = (list, parent) => {
+        const childs = list.filter((item) => item[this.parentKey] == parent);
+        return childs.map((item) => {
+          const key = item[this.rowKey];
+          return {
+            title: item[this.labelKey],
+            key: key,
+            children: treeMap(list, key),
+            value: item,
+          };
+        });
+      };
+      return treeMap(list, this.rootValue);
     },
     handleSelect(selectedKeys, evt) {
-      this.selecteds = this.getValues(selectedKeys);
+      this.selecteds = evt.selectedNodes.map((item) => item.data.props.value);
     },
-    getValues(keys) {
-      const childMap = item => {
-        var list = [];
-        if (item.children) {
-          list = list.concat(item.children);
-          item.children.map(it => {
-            const childs = childMap(it);
-            list = list.concat(childs);
-          });
+    handleRequest(data) {
+      return Promise.resolve().then(() => {
+        if (typeof this.request === "string") {
+          return this.$request.post(this.request, { ...data });
+        } else if (typeof this.request === "function") {
+          return this.request.apply(this, [{ ...data }]);
+        } else {
+          return Promise.reject({ message: "request param type error" });
         }
-        return list;
-      };
-
-      let records = childMap({ children: this.treeData });
-      records = records.filter(item => keys.indexOf(item.key) >= 0);
-      return records;
+      });
     },
     refresh() {
-      this.service.tree().then(response => {
-        this.treeData = response.data;
+      this.handleRequest(this.data).then((response) => {
+        this.treeData = this.tree(response.data);
       });
-    }
-  }
+    },
+  },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <span>
-    <a-button type="primary" @click="onRequest">{{text}}</a-button>
+    <a-button :type="actionType" @click="onRequest" :disabled="disabled">{{text}}</a-button>
     <a-modal
       v-if="used_modal"
       :title="text+'对话框'"
@@ -8,7 +8,9 @@
       @ok="handleOk"
       @cancel="visible=false"
     >
-      <slot></slot>
+      <a-form-model ref="editForm" v-bind="form" :model="model">
+        <slot :model="model"></slot>
+      </a-form-model>
     </a-modal>
   </span>
 </template>
@@ -22,18 +24,41 @@ export default {
       type: [String, Function],
     },
     data: null,
+    actionType: {
+      type: String,
+      default: "default",
+    },
+    form: {
+      type: Object,
+      default: () => {},
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  inject:{
+    $bus:{
+      default:()=>null
+    }
   },
   data() {
     return {
       visible: false,
+      model: { ...this.data },
     };
   },
   mounted() {
-    console.log(this);
+    
   },
   computed: {
     used_modal() {
       return this.$scopedSlots.default;
+    },
+  },
+  watch: {
+    data(newValue, oldValue) {
+      this.model = { ...this.model, ...newValue };
     },
   },
   methods: {
@@ -42,7 +67,7 @@ export default {
         this.visible = true;
         return;
       }
-      this.handleRequest(this.data);
+      this.handleRequest(this.model);
     },
     handleRequest(data) {
       return Promise.resolve()
@@ -59,6 +84,9 @@ export default {
           (response) => {
             message.info(`${this.text}操作成功`);
             this.visible = false;
+            if (this.$bus) {
+              this.$bus.$emit("refresh");
+            }
           },
           (err) => {
             message.warning(`对不起，操作异常。${err.message}`);
@@ -66,7 +94,16 @@ export default {
         );
     },
     handleOk() {
-      this.handleRequest(this.data);
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          this.handleRequest(this.model).then(() => {
+            this.$refs.editForm.resetFields();
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
   },
 };

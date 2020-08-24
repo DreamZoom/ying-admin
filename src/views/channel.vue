@@ -1,22 +1,29 @@
 <template>
   <ying-page-wapper>
-    <ying-tree :service="service()" ref="tree">
-      <template slot="action" slot-scope="{selecteds}">
-        <a-button
-          icon="plus"
-          size="small"
-          @click="modal().form().then(()=>{this.$refs.tree.refresh()})"
-        >添加</a-button>
-        <a-button
-          icon="delete"
-          size="small"
-          @click="modal().batchDelete({rows:selecteds}).then(()=>{this.$refs.tree.refresh()})"
-        >删除</a-button>
+    <ying-tree request="/api/news/channel/list">
+      <template slot="action" slot-scope="{rows}">
+        <ying-action
+          text="编辑"
+          :data="{...rows[0]}"
+          request="/api/news/channel/save"
+          action-type="primary"
+        >
+          <template slot-scope="{model}">
+            <a-form-model-item label="用户名" prop="name">
+              <a-input v-model="model.name" type="textarea" />
+            </a-form-model-item>
+          </template>
+        </ying-action>
+        <ying-action
+          text="删除"
+          :data="{...rows[0]}"
+          request="/api/news/channel/save"
+          action-type="danger"
+        ></ying-action>
       </template>
-      <template slot-scope="{model}">
-        <div>{{model.title}}</div>
-        <a-button type="link" @click="modal().form({model:record,create:false}).then(()=>{this.$refs.table.refresh()})">编辑</a-button>
-      </template>
+      <div slot-scope="{rows}">
+        <div v-for="(item,i) in rows" :key="i">{{item.name}}</div>
+      </div>
     </ying-tree>
   </ying-page-wapper>
 </template>
@@ -28,11 +35,11 @@ const { ActionModal } = ui;
 export default {
   data() {
     return {
-      treeData: []
+      treeData: [],
     };
   },
   mounted() {
-    channelService.tree().then(response => {
+    channelService.tree().then((response) => {
       this.treeData = response.data;
     });
   },
@@ -47,9 +54,9 @@ export default {
                   <a-form-model-item label="Activity name">
                     <a-input v-model="form.name" />
                   </a-form-model-item>
-                  `
+                  `,
       });
-    }
-  }
+    },
+  },
 };
 </script>

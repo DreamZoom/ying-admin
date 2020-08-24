@@ -37,6 +37,9 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
+
+const $bus = new Vue();
 export default {
   name: "YingTable",
   props: {
@@ -46,8 +49,13 @@ export default {
     title: String,
     columns: {
       type: [Array, Function],
-      default: ()=>[],
+      default: () => [],
     },
+  },
+  provide() {
+    return {
+      $bus: $bus,
+    };
   },
   data() {
     return {
@@ -90,6 +98,11 @@ export default {
       } else if (this.columns instanceof Array) {
         this.initColumns(this.columns);
       }
+
+      $bus.$on("refresh", (reload) => {
+        console.log("refresh");
+        this.refresh(reload);
+      });
     },
     initColumns(columns) {
       this.def_columns = columns;
@@ -179,6 +192,6 @@ export default {
 }
 
 .ying-table-batch-actions > * {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 </style>
