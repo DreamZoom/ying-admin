@@ -20,6 +20,7 @@ import BaseService from "./service/service";
 
 
 import YingLayout from "./layout/main";
+import YingEmpty from "./layout/main";
 
 import YingLogin from "./views/login";
 
@@ -33,6 +34,7 @@ const components = {
     YingTree,
     YingPage,
     YingLayout,
+    YingEmpty,
     YingLogin,
     YingAction
 };
