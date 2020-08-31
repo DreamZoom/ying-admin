@@ -9,7 +9,7 @@
     </a-card>
     <div class="divider-line" v-if="advancedSearch"></div>
     <a-card>
-      <div class="ant-pro-table-toolbar">
+      <div class="ant-pro-table-toolbar" v-if="showHeader">
         <div class="ant-pro-table-toolbar-title">{{title}}</div>
         <div class="ant-pro-table-toolbar-option">
           <div class="ant-space ant-space-horizontal ant-space-align-center">
@@ -24,11 +24,11 @@
         :pagination="pagination"
         :row-selection="rowSelection"
         :loading="loading"
-        :columns="def_columns"
+        :columns="show_columns"
         :data-source="list"
         @change="handleChange"
       >
-        <span slot="actions" slot-scope="record">
+        <span v-if="showActions" slot="actions" slot-scope="record">
           <slot name="action" :record="record"></slot>
         </span>
         <slot></slot>
@@ -51,6 +51,10 @@ export default {
       type: [Array, Function],
       default: () => [],
     },
+    showHeader:{
+      type:Boolean,
+      default:true
+    }
   },
   provide() {
     return {
@@ -75,17 +79,29 @@ export default {
     advancedSearch() {
       return this.$scopedSlots.search;
     },
+    showActions() {
+      console.log(this.$scopedSlots.action);
+      return this.$scopedSlots.action;
+    },
     rowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
           this.selected_rows = selectedRows;
-          console.log(
-            `selectedRowKeys: ${selectedRowKeys}`,
-            "selectedRows: ",
-            selectedRows
-          );
+          this.$emit("selectedChange",this.selected_rows);
         },
       };
+    },
+    show_columns() {
+      if (this.showActions) {
+        return this.def_columns.concat([
+          {
+            title: "操作",
+            key: "action",
+            scopedSlots: { customRender: "actions" },
+          },
+        ]);
+      }
+      return this.def_columns;
     },
   },
   mounted() {
@@ -106,11 +122,6 @@ export default {
     },
     initColumns(columns) {
       this.def_columns = columns;
-      this.def_columns.push({
-        title: "操作",
-        key: "action",
-        scopedSlots: { customRender: "actions" },
-      });
       this.handleChange(this.pagination, {}, {});
     },
     handleRequest(data) {

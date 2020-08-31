@@ -14,6 +14,8 @@ import YingTree from "./components/tree";
 import YingPage from "./components/page";
 import YingAction from "./components/action";
 
+import YingTableSelect from "./components/table-select";
+
 import app from "./store/index";
 import request from "./utils/request";
 import BaseService from "./service/service";
@@ -36,13 +38,14 @@ const components = {
     YingLayout,
     YingEmpty,
     YingLogin,
-    YingAction
+    YingAction,
+    YingTableSelect
 };
 
 
 const install = function (Vue, opts = { size: "large" }) {
     Vue.use(VueRouter);
-   
+
     Vue.use(antd, opts);
 
     Vue.prototype.$app = app;//注入app服务

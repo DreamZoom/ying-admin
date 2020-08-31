@@ -13,6 +13,9 @@
             <a-form-model-item label="用户名" prop="name">
               <a-input v-model="model.name" type="textarea" />
             </a-form-model-item>
+            <a-form-model-item label="用户名" prop="name">
+              <ying-table-select :table-props="{request:'/api/news/channel/page-list',columns:columns}"></ying-table-select>
+            </a-form-model-item>
           </template>
         </ying-action>
         <ying-action
