@@ -15,9 +15,11 @@ import YingPage from "./components/page";
 import YingAction from "./components/action";
 
 import YingTableSelect from "./components/table-select";
+import YingTreeSelect from "./components/tree-select";
 
 import app from "./store/index";
 import request from "./utils/request";
+import task from "./utils/task";
 import BaseService from "./service/service";
 
 
@@ -39,7 +41,8 @@ const components = {
     YingEmpty,
     YingLogin,
     YingAction,
-    YingTableSelect
+    YingTableSelect,
+    YingTreeSelect
 };
 
 
@@ -50,6 +53,7 @@ const install = function (Vue, opts = { size: "large" }) {
 
     Vue.prototype.$app = app;//注入app服务
     Vue.prototype.$request = request;
+    Vue.prototype.$task = task;
 
     Object.keys(components).forEach((key) => {
         const component = components[key];

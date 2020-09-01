@@ -51,10 +51,14 @@ export default {
       type: [Array, Function],
       default: () => [],
     },
-    showHeader:{
-      type:Boolean,
-      default:true
-    }
+    showHeader: {
+      type: Boolean,
+      default: true,
+    },
+    multiple: {
+      type: Boolean,
+      default: true,
+    },
   },
   provide() {
     return {
@@ -87,8 +91,9 @@ export default {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
           this.selected_rows = selectedRows;
-          this.$emit("selectedChange",this.selected_rows);
+          this.$emit("selectedChange", this.selected_rows);
         },
+        type:this.selectd_type
       };
     },
     show_columns() {
@@ -102,6 +107,10 @@ export default {
         ]);
       }
       return this.def_columns;
+    },
+    selectd_type() {
+      if (this.multiple) return "checkbox";
+      return "radio";
     },
   },
   mounted() {
@@ -163,6 +172,9 @@ export default {
     },
     refresh() {
       this.handleChange(this.pagination, this.filters, this.sorter);
+    },
+    getSelecteds() {
+      return this.selected_rows;
     },
   },
 };

@@ -14,7 +14,14 @@
               <a-input v-model="model.name" type="textarea" />
             </a-form-model-item>
             <a-form-model-item label="用户名" prop="name">
-              <ying-table-select :table-props="{request:'/api/news/channel/page-list',columns:columns}"></ying-table-select>
+              {{model.users}}
+              <ying-table-select
+                v-model="model.users"
+                request="/api/news/channel/list"
+                :table-props="{request:'/api/news/channel/page-list',columns:columns}"
+              ></ying-table-select>
+              {{model.tree}}
+              <ying-tree-select request="/api/news/channel/list" v-model="model.tree" multiple></ying-tree-select>
             </a-form-model-item>
           </template>
         </ying-action>

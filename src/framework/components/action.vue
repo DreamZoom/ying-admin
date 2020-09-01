@@ -5,6 +5,7 @@
       v-if="used_modal"
       :title="text+'对话框'"
       :visible="visible"
+      width="60%"
       @ok="handleOk"
       @cancel="visible=false"
     >
