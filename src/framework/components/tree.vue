@@ -9,9 +9,7 @@
       </a-card>
     </a-col>
     <a-col :span="18">
-      <a-card >
-        <slot :rows="selecteds"></slot>
-      </a-card>
+      <slot :rows="selecteds"></slot>
     </a-col>
   </a-row>
 </template>
