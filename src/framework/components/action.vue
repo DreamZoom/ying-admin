@@ -85,6 +85,7 @@ export default {
           (response) => {
             message.info(`${this.text}操作成功`);
             this.visible = false;
+            this.$emit("success");
             if (this.$bus) {
               this.$bus.$emit("refresh");
             }

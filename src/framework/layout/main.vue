@@ -9,10 +9,12 @@
       :theme="$app.getters.theme"
     >
       <div class="ying-app-logo" :class="$app.getters.theme">
-        <a>
-          <img :src="$app.getters.logo" alt="logo" />
-          <h1 v-if="!collapsed">{{$app.getters.title}}</h1>
-        </a>
+        <slot name="logo">
+          <a>
+            <img :src="$app.getters.logo" alt="logo" />
+            <h1 v-if="!collapsed">{{$app.getters.title}}</h1>
+          </a>
+        </slot>
       </div>
       <component :is="$app.getters.menus"></component>
     </a-layout-sider>
