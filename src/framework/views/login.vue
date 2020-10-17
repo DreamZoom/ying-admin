@@ -42,7 +42,7 @@ export default {
         console.log(this.$app);
         const { client_id, client_secret } = this.$app.getters.client;
         return request
-          .post("/api/oauth/token", {
+          .post("/oauth/token", {
             grant_type: "password",
             client_id,
             client_secret,
@@ -50,7 +50,8 @@ export default {
           })
           .then((response) => {
             const token = response.data;
-            return request.post("/api/oauth/user").then((response) => {
+            this.$app.commit("setToken", { ...token });
+            return request.post("/oauth/user").then((response) => {
               const user = response.data;
               return Promise.resolve({
                 token,
