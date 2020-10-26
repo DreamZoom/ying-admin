@@ -46,6 +46,16 @@ export default {
     request: {
       type: [String, Function],
     },
+    dataConverter:{
+      type:Function,
+      default:(data)=>{
+        return {
+          list:data.content,
+          records:data.totalElements,
+          ...data
+        }
+      }
+    },
     title: String,
     columns: {
       type: [Array, Function],
@@ -59,6 +69,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    pageOffset:{
+      type:Number,
+      default:-1
+    }
   },
   provide() {
     return {
@@ -154,12 +168,13 @@ export default {
       this.loading = true;
       this.handleRequest({
         size: pagination.pageSize,
-        page: pagination.current,
+        page: pagination.current+this.pageOffset,
         sortField: sorter.field,
         sortOrder: sorter.order,
         ...filters,
       }).then((response) => {
-        const { data } = response;
+        let { data } = response;
+        data = this.dataConverter(data);
         const pagination = { ...this.pagination };
         pagination.total = data.records;
         this.loading = false;
