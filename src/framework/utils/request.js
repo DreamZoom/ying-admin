@@ -2,6 +2,8 @@ import axios from "axios";
 import qs from "querystring";
 import { message, notification } from "ant-design-vue";
 
+import router from "../router/index";
+
 const codeMessage = {
     200: '服务器成功返回请求的数据。',
     201: '新建或修改数据成功。',
@@ -46,6 +48,9 @@ request.interceptors.response.use(function (response) {
             message: `请求错误 ${response.status}:`,
             description: `${errorText}`,
         });
+        if(response.status==401){
+            router.push("/login");
+        }
     } else if (!response) {
         notification.error({
             description: '您的网络发生异常，无法连接服务器',
