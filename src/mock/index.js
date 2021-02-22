@@ -32,6 +32,7 @@ Mock.mock("/api/news/channel/page-list", (request) => {
         "list|10": [{
             'id|+1': 1,
             name: "@name",
+            sort:99
         }],
         records: 1000,
         page: 1,

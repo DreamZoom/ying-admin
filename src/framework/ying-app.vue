@@ -10,7 +10,7 @@ function build_menus(parent, parentPath) {
   var menus = [];
   if (!(parent.children && parent.children instanceof Array)) return menus;
   parent.children.map((item) => {
-    let { path, name, icon, children } = item;
+    let { path, name, icon, children,meta } = item;
     if (name) {
       const arrPath = parentPath.concat([path]);
       const childs = build_menus(item, arrPath);
@@ -20,6 +20,7 @@ function build_menus(parent, parentPath) {
         name,
         icon,
         childs,
+        meta
       });
     }
   });

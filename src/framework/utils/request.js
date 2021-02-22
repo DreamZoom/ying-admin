@@ -40,17 +40,26 @@ request.interceptors.request.use(function (config) {
 request.interceptors.response.use(function (response) {
     return Promise.resolve(response);
 }, function (error) {
+    console.log(error);
     const { response } = error;
     if (response && response.status) {
-        const { data } = response;
-        const errorText = codeMessage[response.status] || response.statusText;
-        notification.error({
-            message: `请求错误 ${response.status}:`,
-            description: `${errorText}`,
-        });
+        const { data={} } = response;
         if(response.status==401){
             router.push("/login");
+            return;
         }
+        if(data.message && data.message!=''){
+            notification.error({
+                message: `${data.message}`,
+            });
+            return;
+        }
+        const errorText = codeMessage[response.status] || response.statusText;
+        notification.error({
+            message: `请求发生错误`,
+            description: `${errorText}`,
+        });
+        
     } else if (!response) {
         notification.error({
             description: '您的网络发生异常，无法连接服务器',

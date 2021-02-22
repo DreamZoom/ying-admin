@@ -5,7 +5,7 @@
         <div>
            <slot name="action" :rows="selecteds"></slot>
         </div>
-        <a-tree :tree-data="treeData" :showLine="showLine" @select="handleSelect" :multiple="multiple" />
+        <a-tree :tree-data="treeData" :showLine="showLine" @select="handleSelect" :multiple="multiple" :autoExpandParent="true"/>
       </a-card>
     </a-col>
     <a-col :span="18">
@@ -14,6 +14,8 @@
   </a-row>
 </template>
 <script>
+import Vue from "vue";
+const $bus = new Vue();
 export default {
   name: "YingTree",
   props: {
@@ -46,6 +48,11 @@ export default {
       default: "name",
     },
   },
+  provide() {
+    return {
+      $bus: $bus,
+    };
+  },
   data() {
     return {
       treeData: [],
@@ -60,6 +67,11 @@ export default {
     init() {
       this.handleRequest(this.data).then((response) => {
         this.treeData = this.tree(response.data);
+      });
+
+      $bus.$on("refresh", (reload) => {
+        console.log("refresh");
+        this.refresh(reload);
       });
     },
     tree(list) {

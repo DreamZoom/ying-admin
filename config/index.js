@@ -11,11 +11,22 @@ module.exports = {
 		assetsPublicPath: '/',
 		proxyTable: {
 			'/api': {
-				target: 'http://localhost:9090/',
+				target: 'http://192.168.1.167:9090/',
 				pathRewrite: {
 					'^/api/': '/api/'
 				}
-			}
+			},
+			'/upload': {
+				target: 'http://192.168.1.167:9090/', // 真是服务器的接口地址 // http://localhost:54321/json.data.json,
+				changeOrigin: true, // 是否是跨域请求?肯定是啊,不跨域就没有必要配置这个proxyTable了.
+			  },
+			  "/oauth": {
+				target: 'http://192.168.1.167:9090/',
+				changeOrigin: true,
+				pathRewrite: {
+					'^/oauth/': '/oauth/'
+				}
+			  },
 		},
 
 		// Various Dev Server settings

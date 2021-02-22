@@ -9,7 +9,7 @@
       @ok="handleOk"
       @cancel="visible=false"
     >
-      <a-form-model ref="editForm" v-bind="form" :model="model">
+      <a-form-model v-if="visible" ref="editForm" v-bind="form" :model="model">
         <slot :model="model"></slot>
       </a-form-model>
     </a-modal>
@@ -59,7 +59,7 @@ export default {
   },
   watch: {
     data(newValue, oldValue) {
-      this.model = { ...this.model, ...newValue };
+      this.model = { ...newValue };
     },
   },
   methods: {
@@ -84,7 +84,7 @@ export default {
         .then(
           (response) => {
             message.info(`${this.text}操作成功`);
-            this.visible = false;
+           
             this.$emit("success");
             if (this.$bus) {
               this.$bus.$emit("refresh");
@@ -99,6 +99,8 @@ export default {
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           this.handleRequest(this.model).then(() => {
+            // this.model={};
+            this.visible = false;
             this.$refs.editForm.resetFields();
           });
         } else {

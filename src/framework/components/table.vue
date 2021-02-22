@@ -21,6 +21,7 @@
       </div>
       <a-table
         rowKey="id"
+        v-bind="tableOptions"
         :pagination="pagination"
         :row-selection="rowSelection"
         :loading="loading"
@@ -28,6 +29,18 @@
         :data-source="list"
         @change="handleChange"
       >
+        <span v-if="sortApi" slot="sorter" slot-scope="record">
+          <a-popconfirm
+              ok-text="修改"
+              cancel-text="取消"
+              @confirm="handleChangeShot(record)"
+            >
+              <span slot="title">
+                排序值:<a-input v-model="record.sort"></a-input>
+              </span>
+              <a href="#">{{record.sort}}</a>
+            </a-popconfirm>
+        </span>
         <span v-if="showActions" slot="actions" slot-scope="record">
           <slot name="action" :record="record"></slot>
         </span>
@@ -38,6 +51,7 @@
 </template>
 <script>
 import Vue from "vue";
+import request from '../utils/request';
 
 const $bus = new Vue();
 export default {
@@ -72,6 +86,21 @@ export default {
     pageOffset:{
       type:Number,
       default:-1
+    },
+    actionWidth:{
+      type:String,
+      default:""
+    },
+    actionOptions:{
+       type:Object,
+      default:()=>{}
+    },
+    tableOptions:{
+      type:Object,
+      default:()=>{}
+    },
+    sortApi:{
+      type:String
     }
   },
   provide() {
@@ -93,6 +122,12 @@ export default {
       sorter: {},
     };
   },
+  watch:{
+    request(){
+      console.log(request);
+      this.refresh(true);
+    }
+  },
   computed: {
     advancedSearch() {
       return this.$scopedSlots.search;
@@ -111,11 +146,21 @@ export default {
       };
     },
     show_columns() {
+      var columns = this.def_columns;
+      if(this.sortApi){
+        columns.push({
+          title: "排序",
+          scopedSlots: { customRender: "sorter" },
+        });
+      }
+      
       if (this.showActions) {
         return this.def_columns.concat([
           {
             title: "操作",
             key: "action",
+            width:this.actionWidth,
+            ...this.actionOptions,
             scopedSlots: { customRender: "actions" },
           },
         ]);
@@ -129,6 +174,10 @@ export default {
   },
   mounted() {
     this.init();
+    $bus.$on("refresh", this.handleRefresh);
+  },
+  destroyed(){
+    $bus.$off("refresh",this.handleRefresh);
   },
   methods: {
     init() {
@@ -137,11 +186,10 @@ export default {
       } else if (this.columns instanceof Array) {
         this.initColumns(this.columns);
       }
-
-      $bus.$on("refresh", (reload) => {
+    },
+    handleRefresh(){
         console.log("refresh");
-        this.refresh(reload);
-      });
+        this.refresh(true);
     },
     initColumns(columns) {
       this.def_columns = columns;
@@ -191,6 +239,14 @@ export default {
     getSelecteds() {
       return this.selected_rows;
     },
+    handleChangeShot(record){
+      this.$request.post(this.sortApi, { ...record }).then(()=>{
+        this.$message.info("修改排序成功");
+        this.refresh();
+      },()=>{
+        this.$message.warning("修改排序失败");
+      })
+    }
   },
 };
 </script>

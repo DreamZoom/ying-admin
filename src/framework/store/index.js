@@ -4,14 +4,17 @@ import default_logo from "../../assets/logo.svg"
 
 Vue.use(Vuex);
 
+let base64 = require('js-base64').Base64
+
 function make_menus(menus) {
     return menus.map((item) => {
-        if (item.childs && item.childs instanceof Array && item.childs.length > 0) {
+        var meta =  base64.encode(JSON.stringify(item.meta||{}));
+        if (item.childs && item.childs instanceof Array && item.childs.length > 0) {   
             const template = make_menus(item.childs);
-            return `<a-sub-menu key="${item.path}" group="true"><span slot="title"><a-icon type="${item.icon}" /><span>${item.name}</span></span>${template}</a-sub-menu>`;
+            return `<a-sub-menu key="${item.path}" v-if="isShow('${meta}')" group="true"><span slot="title"><a-icon type="${item.icon}" /><span>${item.name}</span></span>${template}</a-sub-menu>`;
         }
         else {
-            return `<a-menu-item key="${item.path}"><span><a-icon type="${item.icon}" /><span>${item.name}</span></span></a-menu-item>`;
+            return `<a-menu-item key="${item.path}" v-if="isShow('${meta}')"><span><a-icon type="${item.icon}" /><span>${item.name}</span></span></a-menu-item>`;
         }
     }).join("");
 }
@@ -81,6 +84,8 @@ const store = new Vuex.Store({
         accessVoter(state) {
             return function (access) {
                 access = access || [];
+                if(access.length==0) return true;
+
                 let intersection = store.getters.authorities.filter(function (val) {
                     return access.indexOf(val) > -1;
                 });
@@ -110,6 +115,18 @@ const store = new Vuex.Store({
                         this.$router.push({
                             path: key
                         });
+                    },
+                    isShow(json){
+                        let meta =  base64.decode(json);
+                        console.log(meta);
+                        try {
+                           meta =  JSON.parse(meta);
+                           return this.$app.getters.accessVoter.apply(this.$app, [meta.authority]);
+                        } catch (error) {
+                            
+                        }
+
+                        return true;
                     }
                 }
             };
@@ -145,6 +162,12 @@ const store = new Vuex.Store({
             state.theme = theme || state.theme;
             state.login = login || state.login;
             state.client = client || state.client;
+        },
+        logout(state){
+            state.user = { };
+            state.token = { };
+            window.localStorage.setItem('user', '');
+            window.localStorage.setItem("token", '');
         }
     },
     actions: {

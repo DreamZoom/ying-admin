@@ -12,8 +12,8 @@ export default {
     logo: logo,
     login: "/login",
     client: {
-        client_id: "app_123456",
-        client_secret: "client_secret"
+        client_id: "manager",
+        client_secret: "123456"
     },
     routes: [
         {
@@ -26,7 +26,7 @@ export default {
                     icon: "home",
                     component: home,
                     meta: {
-                        authority: ['admin'],
+                        // authority: ['gov'],
                     }
 
                 },
@@ -34,14 +34,21 @@ export default {
                     path: "channel",
                     name: "栏目管理",
                     icon: "bell",
-                    component: channel
+                    component: channel,
+                    meta: {
+                        authority: ['gov-manage'],
+                    }
+
                 },
                 ,
                 {
                     path: "posts",
                     name: "文章管理",
                     icon: "bell",
-                    component: posts
+                    component: posts,
+                    // meta: {
+                    //     authority: ['gov'],
+                    // }
                 }
             ]
         },

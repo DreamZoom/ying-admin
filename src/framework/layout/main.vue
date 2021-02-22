@@ -12,11 +12,11 @@
         <slot name="logo">
           <a>
             <img :src="$app.getters.logo" alt="logo" />
-            <h1 v-if="!collapsed">{{$app.getters.title}}</h1>
+            <h1 v-if="!collapsed">{{ $app.getters.title }}</h1>
           </a>
         </slot>
       </div>
-      <component :is="$app.getters.menus"></component>
+      <component class="ying-menu" :is="$app.getters.menus"></component>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0px">
@@ -30,11 +30,18 @@
           <div class="ying-app-header-right">
             <slot name="header-right"></slot>
             <slot name="header-user">
-              <div class="ying-app-header-action" v-if="$app.getters.authorized">
+              <div
+                class="ying-app-header-action"
+                v-if="$app.getters.authorized"
+              >
                 <div>
                   <a-icon type="user" />
-                  <span>{{$app.getters.user.username}}</span>
+                  <span>{{ $app.getters.user.username }}</span>
                 </div>
+              </div>
+              <div class="ying-app-header-action"
+                v-if="$app.getters.authorized" @click="logout">
+                <div><span>注销</span></div>
               </div>
             </slot>
 
@@ -45,10 +52,10 @@
                 </a>
                 <a-menu slot="overlay">
                   <a-menu-item>
-                    <a @click="$app.commit('setTheme','dark')">黑色经典</a>
+                    <a @click="$app.commit('setTheme', 'dark')">黑色经典</a>
                   </a-menu-item>
                   <a-menu-item>
-                    <a @click="$app.commit('setTheme','light')">白色通用</a>
+                    <a @click="$app.commit('setTheme', 'light')">白色通用</a>
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
@@ -72,7 +79,12 @@ export default {
       collapsed: false,
     };
   },
-  methods: {},
+  methods: {
+    logout(){
+      this.$app.commit('logout');
+      this.$router.push('/login');
+    }
+  },
 };
 </script>
 <style>
@@ -129,6 +141,30 @@ export default {
 }
 .ying-app-slider {
   box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+  position: relative;
+}
+.ying-app-slider .ying-menu {
+  position: absolute;
+  top: 64px;
+  width: 100%;
+  bottom: 0px;
+  overflow-y: auto;
+}
+
+.ying-app-slider .ying-menu::-webkit-scrollbar {
+
+  width: 5px; 
+  height: 1px;
+}
+.ying-app-slider .ying-menu::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #535353;
+}
+.ying-app-slider .ying-menu::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  background: #001529;
 }
 .ying-app-header {
   position: relative;

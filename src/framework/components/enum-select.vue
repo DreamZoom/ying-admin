@@ -1,7 +1,7 @@
 <template>
   <a-checkbox-group
     v-if="multiple"
-    :value="value"
+    :value="checkedValue"
     :options="list"
     @change="onChange"
   />
@@ -29,6 +29,12 @@ export default {
       list: [],
       innerValue:null
     };
+  },
+  computed:{
+    checkedValue(){
+      var v = this.value||"";
+      return v.split(",");
+    }
   },
   mounted() {
     this.init();
@@ -62,7 +68,12 @@ export default {
       });
     },
     onChange(v) {
-      this.$emit("input", v);
+      console.log(v);
+      var  value = v;
+      if(v instanceof Array){
+        value = v.join(',');
+      }
+      this.$emit("input", value);
     },
   },
 };

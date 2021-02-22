@@ -1,6 +1,7 @@
 <template>
   <ying-page>
-    <ying-table request="/api/news/channel/page-list" :columns="columns" title="文章管理">
+    <ying-table request="/api/news/channel/page-list" :columns="columns" title="文章管理" action-width="300px">
+      
       <template slot="batch-action" slot-scope="{rows}">
         <ying-action
           text="创建"

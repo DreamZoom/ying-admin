@@ -17,6 +17,8 @@ import YingAction from "./components/action";
 import YingTableSelect from "./components/table-select";
 import YingTreeSelect from "./components/tree-select";
 import YingEnumSelect from "./components/enum-select";
+import YingRichEditor from "./components/rich-editor";
+import YingUpload from "./components/upload";
 
 import app from "./store/index";
 import request from "./utils/request";
@@ -44,7 +46,9 @@ const components = {
     YingAction,
     YingTableSelect,
     YingTreeSelect,
-    YingEnumSelect
+    YingEnumSelect,
+    YingRichEditor,
+    YingUpload
 };
 
 
